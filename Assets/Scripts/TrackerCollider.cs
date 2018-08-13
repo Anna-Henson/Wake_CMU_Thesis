@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class TrackerCollider : MonoBehaviour {
 
+	public bool isDancer;
+
   private void OnTriggerEnter(Collider other)
   {
     WayPoint w = other.GetComponent<WayPoint>();
     if (w != null)
     {
-      w.Play();
+	  if (!isDancer) {
+        w.Play();
+	  }
+	  else
+      {
+		w.ReachWithDancer();
+      }
     }
   }
-
-  // Use this for initialization
-  void Start () {
-		
-	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

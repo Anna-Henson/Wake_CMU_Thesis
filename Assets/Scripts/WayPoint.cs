@@ -4,33 +4,59 @@ using UnityEngine;
 
 public class WayPoint : MonoBehaviour {
 
-  private AudioSource audioSource;
-  private bool played = false;
-  public int index;
-  public LineDataCopy lineData;
+	private AudioSource audioSource;
+	private bool played = false;
+	public int index;
+	public LineDataCopy playerLineData;
+	public LineDataCopy dancerLineData;
 
-  //Only used for waypoint 0
-  public GameObject curvePlayer;
-  public GameObject trackerPlayer;
-  public GameObject curveDancer;
-  public GameObject trackerDancer;
-  public GameObject firstPoint;
+	//Only used for waypoint 0
+	public GameObject curvePlayer;
+	public GameObject trackerPlayer;
+	public GameObject curveDancer;
+	public GameObject trackerDancer;
+	public GameObject firstPoint;
 
+
+	private LineDataCopy GetLineData(bool player)
+	{
+		return player ? playerLineData : dancerLineData;
+	}
+
+	private bool CanPlay(bool player)
+	{
+		LineDataCopy ld = GetLineData(player);
+		return ld.GetIndex() == index || ld.GetIndex() + ld.sign == index;
+	}
 
   [ContextMenu("Play")]
   public void Play()
   {
-    if (!played)
+    if (!played && CanPlay(true))
     {
       audioSource.Play();
       played = true;
       float audioLength = audioSource.clip.length;
-      Invoke("NextWaypoint", audioLength);
+      Invoke("NextWaypointPlayer", audioLength);
     }
    
   }
 
-  private void NextWaypoint()
+	private void NextWaypointPlayer()
+	{
+		NextWaypoint(true);
+	}
+
+  public void ReachWithDancer()
+  {
+	if (!played && CanPlay(false))
+	{
+	  played = true;
+	  NextWaypoint(false);
+	}
+  }
+  
+  private void NextWaypoint(bool player)
   {
     if (index == 0)
     {
@@ -38,7 +64,8 @@ public class WayPoint : MonoBehaviour {
       firstPoint.SetActive(false);
     }
 
-    lineData.ReachIndex(index);
+	LineDataCopy ld = GetLineData(player);
+    ld.ReachIndex(index);
   }
 
   private void SetLinesActive(bool active)
