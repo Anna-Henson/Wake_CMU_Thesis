@@ -68,17 +68,15 @@ public class TrackerLine : MonoBehaviour {
   private IEnumerator Fade()
   {
     //TODO: make line transition between tracker line and close line by lerping between corresponding points
-	print("staty");
     for (float time = 0; time < fadeTime; time += Time.deltaTime)
     {
-			print(time);
       float t = time / fadeTime;
       SetAlpha(1 - t);
       otherTracker.GetComponent<TrackerLine>().SetAlpha(1 - t);
       SetObjAlpha(closeLineRenderer, t);
       yield return null;
     }
-		print("done");
+	SetAlpha(1);
     otherTracker.SetActive(false);
     lineData.gameObject.SetActive(false);
     otherTracker.GetComponent<TrackerLine>().lineData.gameObject.SetActive(false);
