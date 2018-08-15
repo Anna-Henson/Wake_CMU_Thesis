@@ -12,8 +12,6 @@ public class TrackerLine : MonoBehaviour {
   private Vector3 helperPosition;
   public Transform helperObj;
   public GameObject closeLineRenderer;
-  public int closeIndex;
-  public float closeDistance;
   public GameObject otherTracker;
   public int closeWaypoint;
   public float fadeTime;
@@ -56,11 +54,7 @@ public class TrackerLine : MonoBehaviour {
 
     if(otherTracker != null && lineData.GetIndex() >= closeWaypoint)
     {
-      float distance = Vector3.Distance(transform.position, otherTracker.transform.position);
-      if(distance < closeDistance)
-      {
         Connect();
-      }
     }
 	}
 
