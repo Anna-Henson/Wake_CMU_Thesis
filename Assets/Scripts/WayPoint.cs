@@ -10,6 +10,8 @@ public class WayPoint : MonoBehaviour {
 	public LineDataCopy playerLineData;
 	public LineDataCopy dancerLineData;
 
+	public KeyCode activateKey;
+
 	//Only used for waypoint 0
 	public GameObject curvePlayer;
 	public GameObject trackerPlayer;
@@ -85,8 +87,11 @@ public class WayPoint : MonoBehaviour {
     audioSource = GetComponent<AudioSource>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	private void Update ()
+	{
+		if (Input.GetKeyDown(activateKey))
+		{
+			Play();
+		}
 	}
 }

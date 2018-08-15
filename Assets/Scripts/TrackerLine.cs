@@ -12,6 +12,7 @@ public class TrackerLine : MonoBehaviour {
   private Vector3 helperPosition;
   public Transform helperObj;
   public GameObject closeLineRenderer;
+  public int closeIndex;
   public float closeDistance;
   public GameObject otherTracker;
   public int closeWaypoint;
