@@ -5,7 +5,8 @@ using UnityEngine;
 public class WayPoint : MonoBehaviour {
 
 	private AudioSource audioSource;
-	private bool played = false;
+	private bool playedPlayer = false;
+	private bool playedDancer = false;
 	public int index;
 	public LineDataCopy playerLineData;
 	public LineDataCopy dancerLineData;
@@ -34,10 +35,10 @@ public class WayPoint : MonoBehaviour {
   [ContextMenu("Play")]
   public void Play()
   {
-    if (!played && CanPlay(true))
+    if (!playedPlayer && CanPlay(true))
     {
       audioSource.Play();
-      played = true;
+      playedPlayer = true;
       float audioLength = audioSource.clip.length;
       Invoke("NextWaypointPlayer", audioLength);
     }
@@ -51,9 +52,9 @@ public class WayPoint : MonoBehaviour {
 
   public void ReachWithDancer()
   {
-	if (!played && CanPlay(false))
+	if (!playedDancer && CanPlay(false))
 	{
-	  played = true;
+	  playedDancer = true;
 	  NextWaypoint(false);
 	}
   }
