@@ -16,6 +16,10 @@ public class TrackerLine : MonoBehaviour {
   public int closeWaypoint;
   public float fadeTime;
 
+  public TrackerCollider tracker;
+
+  private bool connected = false;
+
   private Vector3 GetCurvePoint(float t)
   {
     Vector3 mid1 = Vector3.Lerp(startPosition, helperPosition, t);
@@ -52,8 +56,9 @@ public class TrackerLine : MonoBehaviour {
     helperObj.position = helperPosition;
     UpdatePoints();
 
-    if(otherTracker != null && lineData.GetIndex() >= closeWaypoint)
+    if(!connected && otherTracker != null && lineData.GetIndex() >= closeWaypoint)
     {
+		connected = true; //only happens once
         Connect();
     }
 	}
@@ -61,7 +66,8 @@ public class TrackerLine : MonoBehaviour {
   [ContextMenu("Connect")]
   public void Connect()
   {
-    closeLineRenderer.SetActive(true);
+	tracker.isClose = true;
+	closeLineRenderer.SetActive(true);
     StartCoroutine(Fade());
   }
 

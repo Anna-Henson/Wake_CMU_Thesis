@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class DisableCloseLine : MonoBehaviour {
 
+	public bool disableDancer;
 	public GameObject dancerObj;
 	public GameObject playerCurveLine;
 	public GameObject playerTrackerLine;
+	public TrackerCollider playerTracker;
 	private AudioSource audioSrc;
 
 	private void Start()
@@ -25,10 +27,14 @@ public class DisableCloseLine : MonoBehaviour {
 	[ContextMenu("Disable")]
 	public void Disable()
 	{
-		dancerObj.SetActive(false);
+		if (disableDancer)
+		{
+			dancerObj.SetActive(false);
+		}
 		audioSrc.Play();
 		gameObject.SetActive(false);
 		playerCurveLine.SetActive(true);
 		playerTrackerLine.SetActive(true);
+		playerTracker.isClose = false;
 	}
 }
