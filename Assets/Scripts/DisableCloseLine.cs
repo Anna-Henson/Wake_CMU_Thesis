@@ -8,7 +8,10 @@ public class DisableCloseLine : MonoBehaviour {
 	public GameObject dancerObj;
 	public GameObject playerCurveLine;
 	public GameObject playerTrackerLine;
+	public GameObject dancerCurveLine;
+	public GameObject dancerTrackerLine;
 	public TrackerCollider playerTracker;
+	public TrackerCollider dancerTracker;
 	private AudioSource audioSrc;
 
 	private void Start()
@@ -31,10 +34,16 @@ public class DisableCloseLine : MonoBehaviour {
 		{
 			dancerObj.SetActive(false);
 		}
+		else
+		{
+			dancerCurveLine.SetActive(true);
+			dancerTrackerLine.SetActive(true);
+		}
 		audioSrc.Play();
 		gameObject.SetActive(false);
 		playerCurveLine.SetActive(true);
 		playerTrackerLine.SetActive(true);
 		playerTracker.isClose = false;
+		dancerTracker.isClose = false;
 	}
 }

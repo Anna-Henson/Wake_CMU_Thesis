@@ -73,16 +73,18 @@ public class TrackerLine : MonoBehaviour {
 
   private IEnumerator Fade()
   {
-    //TODO: make line transition between tracker line and close line by lerping between corresponding points
-    for (float time = 0; time < fadeTime; time += Time.deltaTime)
+	TrackerLine otherTrackerLine = otherTracker.GetComponent<TrackerLine>();
+	//TODO: make line transition between tracker line and close line by lerping between corresponding points
+	for (float time = 0; time < fadeTime; time += Time.deltaTime)
     {
       float t = time / fadeTime;
       SetAlpha(1 - t);
-      otherTracker.GetComponent<TrackerLine>().SetAlpha(1 - t);
+      otherTrackerLine.SetAlpha(1 - t);
       SetObjAlpha(closeLineRenderer, t);
       yield return null;
     }
 	SetAlpha(1);
+    otherTrackerLine.SetAlpha(1);
     otherTracker.SetActive(false);
     lineData.gameObject.SetActive(false);
     otherTracker.GetComponent<TrackerLine>().lineData.gameObject.SetActive(false);
