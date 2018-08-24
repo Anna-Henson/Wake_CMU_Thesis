@@ -1,5 +1,9 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Custom/RSShader" 
 {
 	Properties {
@@ -60,7 +64,6 @@ Shader "Custom/RSShader"
 			float3 projectionVec = normalize(v.vertex.xyz - float3(0,rs_planeZDist,0));
 
 			if (d == 0){
-				//v.vertex.z = _DepthScale;
 				tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
 				d = tex.r;
 				if (d == 0){
@@ -102,8 +105,9 @@ Shader "Custom/RSShader"
 				}
 
 			}
-			d *= _DepthScale;
-			v.vertex.xyz += (((d)) * projectionVec);
+
+			d *= _DepthScale;//bringing the plane closer && causing the shooting rays effect
+			v.vertex.xyz += d * projectionVec;	
 			o.modelPos = v.vertex.xyz;
 			
 		}
@@ -123,7 +127,7 @@ Shader "Custom/RSShader"
 
 			
 			if (distFromCenter > 2.5){
-				//o.Alpha = 1;
+				o.Alpha = 1;
 				o.Alpha = clamp(1-(distFromCenter - _WindowSize)*2,0,1.);
 			}
 
@@ -143,7 +147,11 @@ Shader "Custom/RSShader"
 				}
 	
 			}
+			if (IN.uv_MainTex.x <= 0.05 || IN.uv_MainTex.y <= 0.05 || IN.uv_MainTex.x >= 0.95 || IN.uv_MainTex.y >= 0.95){
+				o.Alpha = 0;
+			}
 		}
+
 		ENDCG
 	} 
 	FallBack "Diffuse"
