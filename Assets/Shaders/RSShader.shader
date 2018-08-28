@@ -1,10 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Custom/RSShader" 
+﻿Shader "Custom/RSShader" 
 {
 	Properties {
 		_MainTex ("Base (RGB), Alpha (A)", 2D) = "white" {}
@@ -19,7 +13,7 @@ Shader "Custom/RSShader"
 	SubShader {
 		Tags
         {
-             "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" 
+             "Queue"="Transparent" "RenderType"="TransparentCutout" "IgnoreProjector"="True" 
 		}
 		
 		
@@ -27,14 +21,18 @@ Shader "Custom/RSShader"
         ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
 		Cull back
+		AlphaToMask On
 		
 		//Fog { Mode Off }
 
 		CGPROGRAM
+		#include "UnityCG.cginc"
+
 		#pragma vertex vert
 		#pragma surface surf BlinnPhong  alphatest:_Cutoff alpha
-		#pragma target 3.0
+		#pragma target 4.0
 		#pragma glsl
+		#pragma debug
 
 		sampler2D _MainTex;
 		sampler2D _DepthTex;
@@ -45,11 +43,14 @@ Shader "Custom/RSShader"
 		float _BackgroundSub;
 		float _DepthScale;
 		float _Clip;
+		float _Magnitude;
 
 		struct Input {
 			float2 uv_MainTex;
 			float3 modelPos;
 			float getRidOfThisPoint;
+			float3 modelNormal;
+			INTERNAL_DATA
 		};
 		
 		void vert(inout appdata_full v, out Input o) {
@@ -64,11 +65,11 @@ Shader "Custom/RSShader"
 			float3 projectionVec = normalize(v.vertex.xyz - float3(0,rs_planeZDist,0));
 
 			if (d == 0){
+				//o.getRidOfThisPoint = 1;
 				tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
 				d = tex.r;
 				if (d == 0){
 					
-					o.getRidOfThisPoint = 1;
 					float xOffset = 0;
 					float yOffset = 0;
 					float2 dirVector = normalize(float2(0.5- v.texcoord.x, 0.5 - v.texcoord.y));
@@ -99,28 +100,32 @@ Shader "Custom/RSShader"
 							d = dd;
 						}
 					}
-					if (d == 0 ){
-						d = 1;
-					}					
+					if (d == 0){
+						o.getRidOfThisPoint = 1;
+					}		
 				}
 
 			}
 
-			d *= _DepthScale;//bringing the plane closer && causing the shooting rays effect
+			d *= _DepthScale;
 			v.vertex.xyz += d * projectionVec;	
 			o.modelPos = v.vertex.xyz;
-			
+			o.modelNormal = v.normal;
 		}
 		
 		void surf (Input IN, inout SurfaceOutput o) {
+			float2 uv = IN.uv_MainTex;
 			half4 c = tex2D (_MainTex, IN.uv_MainTex);
 			half4 b = tex2D (_DepthTex, IN.uv_MainTex);
 			
 			o.Albedo = c.rgb;
 			o.Alpha = 1;
+
+		
 			if (_Clip == 0){
 				return;
 			}
+
 			float d = b.r * _DepthScale;
 			float3 correctedPos = float3(IN.modelPos.x,IN.modelPos.y,IN.modelPos.z);
 			float distFromCenter = distance(correctedPos, float3(0,IN.modelPos.y,0));
@@ -131,14 +136,13 @@ Shader "Custom/RSShader"
 				o.Alpha = clamp(1-(distFromCenter - _WindowSize)*2,0,1.);
 			}
 
-			if(IN.getRidOfThisPoint == 1 ){
+			if(IN.getRidOfThisPoint == 1){
 				o.Alpha = 0;
 				discard;
 			}
 			else if (d == 0){
 				o.Alpha = 0;
 				discard;
-			
 			}
 			else{
 				if (d > _BackgroundSub ){
@@ -147,9 +151,14 @@ Shader "Custom/RSShader"
 				}
 	
 			}
-			if (IN.uv_MainTex.x <= 0.05 || IN.uv_MainTex.y <= 0.05 || IN.uv_MainTex.x >= 0.95 || IN.uv_MainTex.y >= 0.95){
+
+			//Cutoff the rim of the UV
+			if (IN.uv_MainTex.x <= 0.005 || IN.uv_MainTex.y <= 0.005 || IN.uv_MainTex.x >= 0.995 || IN.uv_MainTex.y >= 0.995){
 				o.Alpha = 0;
 			}
+
+			o.Albedo = IN.modelNormal;
+			
 		}
 
 		ENDCG
