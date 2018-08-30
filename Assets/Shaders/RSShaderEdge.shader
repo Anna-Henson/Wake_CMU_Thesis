@@ -9,6 +9,9 @@
 		_DepthScale("Depth Scale", float) = 1000
 		_Clip("toggle window mask 1 for on 0 for off", float) = 1
 		//Edge Detection Code with Roberts Operators
+		_EdgeColor("Edge Color", Color) = (0,0,0,1)
+		_EdgeOnly("Edge Only", float) = 1.0
+		_BackgroundColor ("Background Color", Color) = (1, 1, 1, 1)
 		_SampleDistance("Sample Distance", float) = 1.0 //How far away should the samples be apart from each other
 		_Sensitivity("Sensitivity",float) = 1.0 //Sensitivity to depth change
 		
@@ -47,6 +50,9 @@
 		float _DepthScale;
 		float _Clip;
 		//Initiate Edge Detection Variables
+		fixed4 _EdgeColor;
+		float _EdgeOnly;
+		fixed4 _BackgroundColor;
 		float _Sensitivity;
 		float _SampleDistance;
 
@@ -178,7 +184,18 @@
 			}
 			
 			//Make Steep Depth Change Edge Transparent
-			if (edge < 1.0) o.Alpha = 0;
+			if (edge < 1.0) 
+			
+			{	
+				o.Alpha = 1;
+				
+
+				fixed4 withEdgeColor = lerp(_EdgeColor, tex2D(_MainTex, IN.uv_MainTex), edge);
+				fixed4 onlyEdgeColor = lerp(_EdgeColor, _BackgroundColor, edge);
+			
+				o.Albedo = lerp(withEdgeColor, onlyEdgeColor, _EdgeOnly);
+			}
+
 			
 		}
 
