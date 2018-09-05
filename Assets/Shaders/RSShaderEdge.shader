@@ -136,11 +136,11 @@
 
 			half edge = 1.0;
 
-			float diffDepth12 = abs(sample1 - sample2) * (_Sensitivity/2.0);
-			float diffDepth34 = abs(sample3 - sample4) * (_Sensitivity/2.0);
+			float diffDepth12 = abs(sample1 - sample2) * _Sensitivity;
+			float diffDepth34 = abs(sample3 - sample4) * _Sensitivity;
 
-			int isSameDepth12 = diffDepth12 < 0.2 * sample1;
-			int isSameDepth34 = diffDepth34 < 0.2 * sample3;
+			int isSameDepth12 = diffDepth12 < 0.1 * sample1;
+			int isSameDepth34 = diffDepth34 < 0.1 * sample3;
 
 			edge = edge * isSameDepth12 * isSameDepth34;
 			//---------------End of Edge Detection---------------------------------------------------------//

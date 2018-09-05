@@ -25,7 +25,7 @@ MonoBehaviour:
         motionVectorsResolution: 24
         motionVectorsAmplitude: 64
   fog:
-    m_Enabled: 1
+    m_Enabled: 0
     m_Settings:
       excludeSkybox: 1
   antialiasing:
@@ -35,17 +35,17 @@ MonoBehaviour:
       fxaaSettings:
         preset: 2
       taaSettings:
-        jitterSpread: 0.75
+        jitterSpread: 0.488
         sharpen: 0.3
         stationaryBlending: 0.95
         motionBlending: 0.85
   ambientOcclusion:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      intensity: 1
-      radius: 0.3
+      intensity: 3.83
+      radius: 0.29
       sampleCount: 10
-      downsampling: 1
+      downsampling: 0
       forceForwardCompatibility: 0
       ambientOnly: 0
       highPrecision: 0
@@ -53,9 +53,9 @@ MonoBehaviour:
     m_Enabled: 0
     m_Settings:
       reflection:
-        blendType: 0
+        blendType: 1
         reflectionQuality: 2
-        maxDistance: 100
+        maxDistance: 149
         iterationCount: 256
         stepSize: 3
         widthModifier: 0.5
@@ -63,11 +63,11 @@ MonoBehaviour:
         reflectBackfaces: 0
       intensity:
         reflectionMultiplier: 1
-        fadeDistance: 100
+        fadeDistance: 300
         fresnelFade: 1
         fresnelFadePower: 1
       screenEdgeMask:
-        intensity: 0.03
+        intensity: 0.251
   depthOfField:
     m_Enabled: 0
     m_Settings:
@@ -149,8 +149,8 @@ MonoBehaviour:
             - serializedVersion: 3
               time: 0
               value: 0
-              inSlope: 1.2059983
-              outSlope: 1.2059983
+              inSlope: 2.3828194
+              outSlope: 2.3828194
               tangentMode: 0
               weightedMode: 0
               inWeight: 0
@@ -158,8 +158,8 @@ MonoBehaviour:
             - serializedVersion: 3
               time: 1
               value: 1
-              inSlope: 0.039083373
-              outSlope: 0.039083373
+              inSlope: 2.2863717
+              outSlope: 2.2863717
               tangentMode: 0
               weightedMode: 0
               inWeight: 0

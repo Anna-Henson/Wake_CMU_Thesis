@@ -1,9 +1,10 @@
-﻿Shader "Customize/BlendSubject"
+﻿Shader "Custom/BlendSubject"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		_SecondTex ("Object Render Texture", 2D) = "white" {}
+		_Contrast("Contrast", float) = 1.0
 	}
 	SubShader
 	{
@@ -43,13 +44,16 @@
 			
 			sampler2D _MainTex;
 			sampler2D _SecondTex;
+			float _Contrast;	
 
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
-				if (col.b == 1){
-					col = tex2D(_SecondTex, i.uv);
-				}
+				col.a = 1.0 - (col.r + col.b + col.g) / 3.0;
+				/*-----------------------Adjust Contrast--------------------------------------------
+				col.rgb = pow(abs(col.rgb * 2 - 1), 1/max(_Contrast, 0.0001)) * sign(col.rgb - 0.5) + 0.5;
+				-------------------------For Later--------------------------------------------------*/
+				col = col * col.a + tex2D(_SecondTex, i.uv) * (1 - col.a);
 				return col;
 			}
 			ENDCG

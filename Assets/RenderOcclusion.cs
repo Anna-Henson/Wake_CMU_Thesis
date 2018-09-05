@@ -16,9 +16,10 @@ public class RenderOcclusion : MonoBehaviour {
   // Update is called once per frame
   private void OnRenderImage(RenderTexture source, RenderTexture destination)
   {
-    TempCam.gameObject.transform.position = Camera.gameObject.transform.position;
-    TempCam.gameObject.transform.rotation = Camera.gameObject.transform.rotation;
-    TempCam.fieldOfView = Camera.fieldOfView;
+    TempCam.CopyFrom(Camera);
+    TempCam.backgroundColor = Color.white;
+    TempCam.clearFlags = CameraClearFlags.Color;
+    TempCam.cullingMask = 1 << LayerMask.NameToLayer("Subject");
     RenderTexture TempRT = new RenderTexture(source.width, source.height, 0, RenderTextureFormat.ARGB32);
 
     TempRT.Create();
