@@ -42,8 +42,8 @@ MonoBehaviour:
   ambientOcclusion:
     m_Enabled: 1
     m_Settings:
-      intensity: 3.83
-      radius: 0.29
+      intensity: 2.74
+      radius: 0.34
       sampleCount: 10
       downsampling: 0
       forceForwardCompatibility: 0
@@ -115,8 +115,8 @@ MonoBehaviour:
         tonemapper: 2
         neutralBlackIn: 0.02
         neutralWhiteIn: 10
-        neutralBlackOut: 0
-        neutralWhiteOut: 8.11
+        neutralBlackOut: -0.013
+        neutralWhiteOut: 16.26
         neutralWhiteLevel: 5.3
         neutralWhiteClip: 10
       basic:
@@ -125,7 +125,7 @@ MonoBehaviour:
         tint: 0
         hueShift: 0
         saturation: 1
-        contrast: 1
+        contrast: 2
       channelMixer:
         red: {x: 1, y: 0, z: 0}
         green: {x: 0, y: 1, z: 0}
