@@ -8,6 +8,7 @@
 		_BackgroundSub("Background Point", float) = 0.5
 		_DepthScale("Depth Scale", float) = 1000
 		_Clip("toggle window mask 1 for on 0 for off", float) = 1
+		_ScanRange("Range of Visible Depth", float) = 0.005
 		//Edge Detection Code with Roberts Operators
 		_EdgeColor("Edge Color", Color) = (0,0,0,1)
 		_EdgeOnly("Edge Only", float) = 1.0
@@ -27,7 +28,6 @@
         ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
 		Cull back
-		AlphaToMask On
 		
 		//Fog { Mode Off }
 
@@ -35,7 +35,7 @@
 		#include "UnityCG.cginc"
 
 		#pragma vertex vert
-		#pragma surface surf BlinnPhong  alphatest:_Cutoff alpha
+		#pragma surface surf Lambert  alphatest:_Cutoff alpha
 		#pragma target 4.0
 		#pragma glsl
 
@@ -49,6 +49,7 @@
 		float _BackgroundSub;
 		float _DepthScale;
 		float _Clip;
+		float _ScanRange;
 		//Initiate Edge Detection Variables
 		fixed4 _EdgeColor;
 		float _EdgeOnly;
@@ -135,11 +136,11 @@
 
 			half edge = 1.0;
 
-			float diffDepth12 = abs(sample1 - sample2) * _Sensitivity;
-			float diffDepth34 = abs(sample3 - sample4) * _Sensitivity;
+			float diffDepth12 = abs(sample1 - sample2) * (_Sensitivity/2.0);
+			float diffDepth34 = abs(sample3 - sample4) * (_Sensitivity/2.0);
 
-			int isSameDepth12 = diffDepth12 < 0.1 * sample1;
-			int isSameDepth34 = diffDepth34 < 0.1 * sample3;
+			int isSameDepth12 = diffDepth12 < 0.2 * sample1;
+			int isSameDepth34 = diffDepth34 < 0.2 * sample3;
 
 			edge = edge * isSameDepth12 * isSameDepth34;
 			//---------------End of Edge Detection---------------------------------------------------------//
@@ -171,7 +172,7 @@
 				discard;
 			}
 			else{
-				if (d > _BackgroundSub ){
+				if (d > _BackgroundSub || d < _BackgroundSub - _ScanRange * _DepthScale){
 					//discard;
 					o.Alpha = 0;
 				}
@@ -187,13 +188,8 @@
 			if (edge < 1.0) 
 			
 			{	
-				o.Alpha = 1;
-				
-
-				fixed4 withEdgeColor = lerp(_EdgeColor, tex2D(_MainTex, IN.uv_MainTex), edge);
-				fixed4 onlyEdgeColor = lerp(_EdgeColor, _BackgroundColor, edge);
+				o.Alpha = 0;
 			
-				o.Albedo = lerp(withEdgeColor, onlyEdgeColor, _EdgeOnly);
 			}
 
 			

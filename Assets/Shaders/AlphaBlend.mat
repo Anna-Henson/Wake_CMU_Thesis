@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: RS_plane
-  m_Shader: {fileID: 4800000, guid: e013fe87581e7704d974e622449bd1fd, type: 3}
+  m_Name: AlphaBlend
+  m_Shader: {fileID: 4800000, guid: c60e62dcb0dc85946b5c90e93b4c2131, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -18,15 +18,7 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BackgroundTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DepthTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -54,14 +46,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _ModTex:
-        m_Texture: {fileID: 2800000, guid: 14252ef10fce8df46b0193db15d86027, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NoiseTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -70,45 +54,27 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _PrevDepthTex:
+    - _SecondTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _RSPlane:
-        m_Texture: {fileID: 8400000, guid: 09f81a6c0bb9538448a9b1059ba9a50b, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BackgroundSub: 4
     - _BumpScale: 1
-    - _Clip: 14
     - _Cutoff: 0.5
-    - _DepthScale: 200
-    - _DespthScale: 100
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _EdgeOnly: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Magnitude: 0.0005
     - _Metallic: 0
-    - _ModAmount: 88.89
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _SampleDistance: 6.4
-    - _ScanRange: 0.5
-    - _Sensitivity: -2.2
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WindowDistance: -0.7
-    - _WindowSize: 58.9
     - _ZWrite: 1
     m_Colors:
-    - _BackgroundColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EdgeColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
