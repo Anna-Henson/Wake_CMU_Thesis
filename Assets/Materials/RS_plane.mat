@@ -81,8 +81,8 @@ Material:
     m_Floats:
     - _BackgroundSub: 8.32
     - _BumpScale: 1
-    - _Clip: 14
-    - _Cutoff: 0.5
+    - _Clip: 1
+    - _Cutoff: 0
     - _DepthScale: 590
     - _DespthScale: 100
     - _DetailNormalMapScale: 1
@@ -97,9 +97,9 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _SampleDistance: -0.81
-    - _ScanRange: 0.8
-    - _Sensitivity: 6.34
+    - _SampleDistance: 0.9
+    - _ScanRange: 0.5
+    - _Sensitivity: 3.98
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

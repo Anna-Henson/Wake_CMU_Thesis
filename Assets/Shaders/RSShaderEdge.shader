@@ -20,21 +20,23 @@
 		Pass {
 			Tags
 			{
-				 "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" 
+				 "Queue"="AlphaTest" "RenderType"="TransparentCutout" "IgnoreProjector"="True"  "DisableBatching"="True"
 			}
 		
 			ZTest LEqual
-			ZWrite Off
+			ZWrite off
 			Blend SrcAlpha OneMinusSrcAlpha
-			Cull back
+			Cull Off
 		
 			//Fog { Mode Off }
 
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma multi_compile_shadowcaster
 			#pragma target 4.0
 			#pragma glsl
+			#include "UnityCG.cginc"
 
 
 			struct appdata {
@@ -46,6 +48,7 @@
 				float4 uv_MainTex : TEXCOORD0;
 				float4 modelPos : SV_POSITION;
 				float4 getRidOfThisPoint: TEXCOORD3;
+				float3 normal: NORMAL;
 			};
 
 			sampler2D _MainTex;
@@ -123,7 +126,8 @@
 				}
 
 				d *= _DepthScale;
-				o.modelPos.xyz = v.vertex.xyz + d * projectionVec;
+				v.vertex.xyz = v.vertex.xyz + d * projectionVec;
+				o.modelPos.xyz = v.vertex.xyz;
 				o.getRidOfThisPoint.yzw = o.modelPos.xyz;
 				o.modelPos = UnityObjectToClipPos(o.modelPos);
 				o.uv_MainTex = v.texcoord;
@@ -205,8 +209,9 @@
 
 			ENDCG
 		}
+
 	}
 	
-	FallBack "Diffuse"
+	FallBack "Transparent/Cutout/VertexLit"
 	
 }
