@@ -79,7 +79,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BackgroundSub: 8.32
+    - _BackgroundSub: 8.51
     - _BumpScale: 1
     - _Clip: 1
     - _Cutoff: 0
