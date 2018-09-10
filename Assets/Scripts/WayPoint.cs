@@ -10,10 +10,14 @@ public class WayPoint : MonoBehaviour {
 	public int index;
 	public LineDataCopy playerLineData;
 	public LineDataCopy dancerLineData;
+    private GameObject endLight;
 
 	public KeyCode activateKey;
 
-	//Only used for waypoint 0
+    [Header("Light to Trigger at Index 6")]
+    public GameObject tableLight;
+
+	[Header("Only for Index 0")]
 	public GameObject curvePlayer;
 	public GameObject trackerPlayer;
 	public GameObject curveDancer;
@@ -37,12 +41,22 @@ public class WayPoint : MonoBehaviour {
   {
     if (!playedPlayer && CanPlay(true))
     {
+      //Debug log here. Delete Later.
+      Debug.Log("Triggered" + index);
+
+      if(index == 6)
+      {
+        tableLight.SetActive(true);
+      }
+
       audioSource.Play();
       playedPlayer = true;
       float audioLength = audioSource.clip.length;
-      Invoke("NextWaypointPlayer", audioLength);
+
+      //for testing
+      //Invoke("NextWaypointPlayer", audioLength);
+      NextWaypointPlayer();
     }
-   
   }
 
 	private void NextWaypointPlayer()
@@ -81,18 +95,20 @@ public class WayPoint : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-    if (index == 0)
-    {
-      SetLinesActive(false);
-    }
-    audioSource = GetComponent<AudioSource>();
+      if (index == 0)
+      {
+        SetLinesActive(false);
+      }
+      audioSource = GetComponent<AudioSource>();
+      endLight = GameObject.FindWithTag("endLight");
+      endLight.SetActive(true);
 	}
 	
 	private void Update ()
 	{
-		if (Input.GetKeyDown(activateKey))
-		{
-			Play();
-		}
+      if (Input.GetKeyDown(activateKey))
+	  {
+		Play();
+	  }
 	}
 }

@@ -11,7 +11,7 @@ public class LineDataCopy : MonoBehaviour {
   public float trackerLength;
   private float trackerDistance;
   public float lerpAmount;
-  public int sign = 1; //should be 1 (forward) or -1 (backward)
+  public int sign = 1; //should be 1 (forward/player) or -1 (backward/dancer)
 
   public void ReachIndex(int index)
   {
@@ -153,7 +153,6 @@ public class LineDataCopy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-    PopulateCurve();
+      PopulateCurve();
 	}
 }

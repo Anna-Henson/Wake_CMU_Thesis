@@ -13,6 +13,8 @@ public class DisableCloseLine : MonoBehaviour {
 	public TrackerCollider playerTracker;
 	public TrackerCollider dancerTracker;
 	private AudioSource audioSrc;
+    [Header("End Light")]
+    public GameObject endLight;
 
 	private void Start()
 	{
@@ -34,16 +36,22 @@ public class DisableCloseLine : MonoBehaviour {
 		{
 			dancerObj.SetActive(false);
 		}
-		else
+		/* Obsolete Code: no longer need lines to be drawn after close line
+        else
 		{
 			dancerCurveLine.SetActive(true);
 			dancerTrackerLine.SetActive(true);
-		}
+		}*/
 		audioSrc.Play();
-		gameObject.SetActive(false);
-		playerCurveLine.SetActive(true);
-		playerTrackerLine.SetActive(true);
-		playerTracker.isClose = false;
+        gameObject.SetActive(false);
+
+        //Obsolete Code: no longer need lines to be drawn after close line
+        //playerCurveLine.SetActive(true);
+        //playerTrackerLine.SetActive(true);
+
+        playerTracker.isClose = false;
 		dancerTracker.isClose = false;
+
+        endLight.SetActive(true);
 	}
 }

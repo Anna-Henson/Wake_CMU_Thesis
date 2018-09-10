@@ -49,6 +49,7 @@ public class BindToShader : MonoBehaviour
 
     private void OnStartStreaming(PipelineProfile activeProfile)
     {
+        Debug.Log("On");
         var profile = RealSenseDevice.Instance.ActiveProfile.Streams.First(p => p.Stream == sourceStreamType);
         if (profile == null)
             return;
