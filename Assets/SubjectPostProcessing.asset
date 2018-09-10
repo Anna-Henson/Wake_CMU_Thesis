@@ -113,7 +113,7 @@ MonoBehaviour:
     m_Settings:
       tonemapping:
         tonemapper: 2
-        neutralBlackIn: 0.02
+        neutralBlackIn: 0.038
         neutralWhiteIn: 10
         neutralBlackOut: -0.013
         neutralWhiteOut: 16.26
@@ -122,7 +122,7 @@ MonoBehaviour:
       basic:
         postExposure: 0
         temperature: 72
-        tint: 0
+        tint: 3
         hueShift: 0
         saturation: 1
         contrast: 2
@@ -147,10 +147,10 @@ MonoBehaviour:
             serializedVersion: 2
             m_Curve:
             - serializedVersion: 3
-              time: 0
+              time: 0.0025839794
               value: 0
-              inSlope: 2.3828194
-              outSlope: 2.3828194
+              inSlope: 0.9474148
+              outSlope: 0.9474148
               tangentMode: 0
               weightedMode: 0
               inWeight: 0

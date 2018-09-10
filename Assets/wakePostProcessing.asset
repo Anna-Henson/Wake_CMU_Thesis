@@ -147,10 +147,10 @@ MonoBehaviour:
             serializedVersion: 2
             m_Curve:
             - serializedVersion: 3
-              time: 0
+              time: 0.005167959
               value: 0
-              inSlope: 1
-              outSlope: 1
+              inSlope: 1.0606062
+              outSlope: 1.0606062
               tangentMode: 0
               weightedMode: 0
               inWeight: 0
@@ -322,7 +322,7 @@ MonoBehaviour:
       mode: 0
       color: {r: 0, g: 0, b: 0, a: 1}
       center: {x: 0.5, y: 0.5}
-      intensity: 0.57
+      intensity: 0.44
       smoothness: 0.68
       roundness: 1
       mask: {fileID: 0}

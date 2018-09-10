@@ -49,9 +49,9 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
-				col.a = 1.0 - (col.r + col.b + col.g) / 3.0;
-				col.rgb = pow(abs(col.rgb * 2 - 1), 1/max(_Contrast, 0.0001)) * sign(col.rgb - 0.5) + 0.5;
-				col = col * col.a + tex2D(_SecondTex, i.uv) * (1 - col.a);
+				//col.rgb = pow(abs(col.rgb * 2 - 1), 1/max(_Contrast, 0.0001)) * sign(col.rgb - 0.5) + 0.5;
+				fixed4 subCol = tex2D(_SecondTex, i.uv);
+                col.rgb = subCol.rgb * subCol.a + col.rgb * (1 - subCol.a);
 				return col;
 			}
 			ENDCG
