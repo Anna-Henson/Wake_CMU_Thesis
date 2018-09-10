@@ -12,7 +12,8 @@
 		//Edge Detection Code with Roberts Operators
 		_BackgroundColor ("Background Color", Color) = (1, 1, 1, 1)
 		_SampleDistance("Sample Distance", float) = 1.0 //How far away should the samples be apart from each other
-		_Sensitivity("Sensitivity",float) = 1.0 //Sensitivity to depth change
+		_Sensitivity("Sensitivity", float) = 1.0 //Sensitivity to depth change
+		_FadeOut("Fade Out Slider", range(0, 1)) = 0
 		
 	}
 
@@ -20,7 +21,7 @@
 		Pass {
 			Tags
 			{
-				 "Queue"="AlphaTest" "RenderType"="TransparentCutout" "IgnoreProjector"="True"  "DisableBatching"="True"
+				 "Queue"="AlphaTest" "RenderType"="Transparent" "IgnoreProjector"="True"  "DisableBatching"="True"
 			}
 		
 			ZTest LEqual
@@ -68,6 +69,7 @@
 			fixed4 _BackgroundColor;
 			float _Sensitivity;
 			float _SampleDistance;
+			float _FadeOut;
 		
 			v2f vert(appdata v) {
 				v2f o;
@@ -158,7 +160,7 @@
 				//---------------End of Edge Detection---------------------------------------------------------//
 
 				o.rgb = c.rgb;
-				o.a = 1;
+				o.a = _FadeOut;
 
 		
 				if (_Clip == 0){
@@ -171,8 +173,8 @@
 
 			
 				if (distFromCenter > 2.5){
-					o.a = 1;
-					o.a = clamp(1-(distFromCenter - _WindowSize)*2,0,1.);
+					o.a = _FadeOut;
+					o.a = clamp(_FadeOut-(distFromCenter - _WindowSize)*2,0,_FadeOut);
 				}
 
 				if(IN.getRidOfThisPoint.x == 1){
@@ -197,13 +199,10 @@
 				}
 			
 				//Make Steep Depth Change Edge Transparent
-				if (edge < 1.0) 
-			
+				if (edge < 1.0) 			
 				{	
 					o.a = 0;
-			
 				}
-
 				return o;
 			}
 

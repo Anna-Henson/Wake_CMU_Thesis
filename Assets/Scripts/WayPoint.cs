@@ -100,8 +100,6 @@ public class WayPoint : MonoBehaviour {
         SetLinesActive(false);
       }
       audioSource = GetComponent<AudioSource>();
-      endLight = GameObject.FindWithTag("endLight");
-      endLight.SetActive(true);
 	}
 	
 	private void Update ()
