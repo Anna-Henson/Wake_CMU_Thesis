@@ -48,14 +48,23 @@ public class WayPoint : MonoBehaviour {
       {
         tableLight.SetActive(true);
       }
+            
+      if (audioSource.isActiveAndEnabled == true)
+      {
+        Debug.Log(audioSource);
+        audioSource.Play();
 
-      audioSource.Play();
-      playedPlayer = true;
-      float audioLength = audioSource.clip.length;
+        playedPlayer = true;
+        float audioLength = audioSource.clip.length;
 
-      //for testing
-      //Invoke("NextWaypointPlayer", audioLength);
-      NextWaypointPlayer();
+        //for testing
+        //Invoke("NextWaypointPlayer", audioLength);
+        NextWaypointPlayer();
+      }
+      else
+      {
+        NextWaypointPlayer();
+      }
     }
   }
 

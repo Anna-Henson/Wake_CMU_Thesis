@@ -158,7 +158,9 @@ Shader "Custom/RSShaderEdge"
 				fixed3 worldNormal = normalize(IN.worldNormal);
 				fixed3 worldLight = normalize(UnityWorldSpaceLightDir(IN.worldPos));
 
-				fixed3 diffuse = _LightColor0.rgb + c.rgb + 0.1 * saturate(dot(worldNormal, worldLight));
+				fixed halfLambert = dot(worldNormal, worldLight) * 0.5 + 0.5;
+
+				fixed3 diffuse = _LightColor0.rgb * c.rgb * halfLambert;
 
 				fixed3 color = ambient + diffuse;
 				//Lighting Ends
