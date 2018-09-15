@@ -155,4 +155,41 @@ public class LineDataCopy : MonoBehaviour {
 	void Update () {
       PopulateCurve();
 	}
+
+    [ContextMenu("Debug")]
+    private void PopulateCurveDebug()
+    { 
+        
+        lineRenderer = GetComponent<LineRenderer>();
+        List<Vector3> curvePoints = new List<Vector3>();
+
+        for (int i = 7; i > 0; i--)
+        {
+
+            BezierPoint p0 = bezierCurve[i];
+            BezierPoint p1 = bezierCurve[i+sign];
+
+
+            float increment = 1.0f / resolution;
+
+            if (sign == 1)
+            {
+                for (float t = trackerDistance; t < 1; t += increment)
+                {
+                    AddPoint(p0, p1, t, curvePoints);
+                }
+            }
+            else
+            {
+                for (float t = 1; t > 0; t -= increment)
+                {
+                    AddPoint(p0, p1, t, curvePoints);
+                }
+            }
+
+        }
+
+        lineRenderer.positionCount = curvePoints.Count;
+        lineRenderer.SetPositions(curvePoints.ToArray());
+    }
 }

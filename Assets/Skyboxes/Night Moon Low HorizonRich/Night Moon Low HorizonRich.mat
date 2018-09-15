@@ -4,10 +4,10 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SkyHaloSky
-  m_Shader: {fileID: 104, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: Night Moon Low HorizonRich
+  m_Shader: {fileID: 10700, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,19 +19,19 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BackTex:
-        m_Texture: {fileID: 2800000, guid: 33388096eee0690409d74a835a243679, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7d2493fed972745abb39a9ffdb7ab664, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DownTex:
-        m_Texture: {fileID: 2800000, guid: 209d171ae2172044ba0c2520127c8120, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8bfef3b46e7124d45a6c7d219ed26510, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FrontTex:
-        m_Texture: {fileID: 2800000, guid: 519bff0f165c6b541a8d626121260e3a, type: 3}
+        m_Texture: {fileID: 2800000, guid: dfb0d1ed4b17c4ebcbbb3a45c373d8c1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LeftTex:
-        m_Texture: {fileID: 2800000, guid: 34fb02e33563a2e46a8dc30b1db95a63, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2101d9eab9e3541b6bc7351e5bbe4fa1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -39,16 +39,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RightTex:
-        m_Texture: {fileID: 2800000, guid: 290f12ad67dd9334fae83c3cf6670a73, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1f65cb07f8b1d4040b0aa06f6c562fc9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _UpTex:
-        m_Texture: {fileID: 2800000, guid: 962d039a3950b124099ac6d3aedff947, type: 3}
+        m_Texture: {fileID: 2800000, guid: 788e01e8eff8e4fe09f8f50ad740b4d4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _Exposure: 0.6
-    - _Rotation: 342
+    m_Floats: []
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Tint: {r: 0.4339623, g: 0.35933283, b: 0.34184766, a: 0.5}
