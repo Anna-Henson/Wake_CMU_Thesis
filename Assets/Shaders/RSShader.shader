@@ -57,7 +57,7 @@
 			float d = tex.r;
 			o.getRidOfThisPoint = 0;
 
-			float rs_planeZDist = 3.5;
+			float rs_planeZDist = 1.4;
 
 			float3 projectionVec = normalize(v.vertex.xyz - float3(0,rs_planeZDist,0));
 

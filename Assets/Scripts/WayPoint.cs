@@ -58,8 +58,8 @@ public class WayPoint : MonoBehaviour {
         float audioLength = audioSource.clip.length;
 
         //for testing
-        //Invoke("NextWaypointPlayer", audioLength);
-        NextWaypointPlayer();
+        Invoke("NextWaypointPlayer", audioLength);
+        //NextWaypointPlayer();
       }
       else
       {

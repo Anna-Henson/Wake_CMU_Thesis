@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-Shader "Custom/RSShaderEdge" 
+﻿Shader "Custom/RSShaderEdge1" 
 {
 	Properties {
 		_MainTex ("Base (RGB), Alpha (A)", 2D) = "white" {}
@@ -23,13 +21,14 @@ Shader "Custom/RSShaderEdge"
 		Pass {
 			Tags
 			{
-				 "Queue"="Transparent" "RenderType"="TransparentCutout" "IgnoreProjector"="True"  "DisableBatching"="True" "LightMode"="ForwardBase"
+				 "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True"
 			}
 		
 			ZTest LEqual
-			ZWrite off
+			ZWrite Off
 			Blend SrcAlpha OneMinusSrcAlpha
-			Cull Off
+			Cull back
+			AlphaToMask On
 		
 			//Fog { Mode Off }
 
@@ -40,21 +39,18 @@ Shader "Custom/RSShaderEdge"
 			#pragma target 4.0
 			#pragma glsl
 			#include "UnityCG.cginc"
-			#include "Lighting.cginc"
 
 
 			struct appdata {
 				float4 vertex : POSITION;
 				float4 texcoord : TEXCOORD0;
-				float3 normal: NORMAL;
 			};
 
 			struct v2f {
 				float4 uv_MainTex : TEXCOORD0;
 				float4 modelPos : SV_POSITION;
 				float4 getRidOfThisPoint: TEXCOORD3;
-				float3 worldNormal: TEXCOORD4;
-				float3 worldPos: TEXCOORD5;
+				float3 normal: NORMAL;
 			};
 
 			sampler2D _MainTex;
@@ -68,15 +64,12 @@ Shader "Custom/RSShaderEdge"
 			float _DepthScale;
 			float _Clip;
 			float _ScanRange;
-
 			//Initiate Edge Detection Variables
 			fixed4 _EdgeColor;
 			float _EdgeOnly;
 			fixed4 _BackgroundColor;
 			float _Sensitivity;
 			float _SampleDistance;
-			//End of Edge Detection Variables
-
 			float _FadeOut;
 		
 			v2f vert(appdata v) {
@@ -88,10 +81,11 @@ Shader "Custom/RSShaderEdge"
 				float d = tex.r;
 				o.getRidOfThisPoint = float4(0,0,0,0);
 
-				float rs_planeZDist = 1.5;
+				float rs_planeZDist = 3.5;
 
 				float3 projectionVec = normalize(v.vertex.xyz - float3(0,rs_planeZDist,0));
 
+				//Hole-Filling, Looking for Surrounding Vertexes that has depth data
 				if (d == 0){
 					o.getRidOfThisPoint.x = 1;
 					tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
@@ -139,10 +133,7 @@ Shader "Custom/RSShaderEdge"
 				v.vertex.xyz = v.vertex.xyz + d * projectionVec;
 				o.modelPos.xyz = v.vertex.xyz;
 				o.getRidOfThisPoint.yzw = o.modelPos.xyz;
-
-				o.modelPos = UnityObjectToClipPos(o.modelPos);		
-				o.worldNormal = mul(v.normal, (float3x3)unity_WorldToObject);
-				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				o.modelPos = UnityObjectToClipPos(o.modelPos);
 				o.uv_MainTex = v.texcoord;
 				return o;
 			}
@@ -152,18 +143,6 @@ Shader "Custom/RSShaderEdge"
 				float2 uv = IN.uv_MainTex;
 				half4 c = tex2D (_MainTex, IN.uv_MainTex);
 				half4 b = tex2D (_DepthTex, IN.uv_MainTex);
-
-				//Calculate Lighting: Lambert
-				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
-				fixed3 worldNormal = normalize(IN.worldNormal);
-				fixed3 worldLight = normalize(UnityWorldSpaceLightDir(IN.worldPos));
-
-				fixed halfLambert = dot(worldNormal, worldLight) * 0.5 + 0.5;
-
-				fixed3 diffuse = _LightColor0.rgb * c.rgb * halfLambert;
-
-				fixed3 color = ambient + diffuse;
-				//Lighting Ends
 
 				//-----------------Edge Detection-------------------------------------------------------------//
 				half sample1 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(1, 1) * _SampleDistance).r;
@@ -182,7 +161,7 @@ Shader "Custom/RSShaderEdge"
 				edge = edge * isSameDepth12 * isSameDepth34;
 				//---------------End of Edge Detection---------------------------------------------------------//
 
-				o.rgb = color;
+				o.rgb = c.rgb;
 				o.a = _FadeOut;
 
 		
