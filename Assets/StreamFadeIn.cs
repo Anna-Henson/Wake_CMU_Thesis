@@ -4,17 +4,8 @@ using UnityEngine;
 
 public class StreamFadeIn : MonoBehaviour {
 
-    private bool _fadeIn = false;
+    private bool _fadeIn = true;
     public GameObject RSPlane;
-
-    private void OnTriggerEnter(Collider other)
-    {
-        TrackerCollider trackerCollider = other.GetComponent<TrackerCollider>();
-        if (!trackerCollider.isDancer && !trackerCollider.isClose)
-        {
-            _fadeIn = true;
-        }
-    }
 
     // Use this for initialization
     void Start () {

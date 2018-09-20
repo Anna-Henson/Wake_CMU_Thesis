@@ -39,6 +39,7 @@ public class WayPoint : MonoBehaviour {
   [ContextMenu("Play")]
   public void Play()
   {
+        Debug.Log(index + "playedPlayer:" + playedPlayer);
     if (!playedPlayer && CanPlay(true))
     {
       //Debug log here. Delete Later.
@@ -47,6 +48,11 @@ public class WayPoint : MonoBehaviour {
       if(index == 6)
       {
         tableLight.SetActive(true);
+      }
+
+      if(index == 2)
+      {
+        GetComponent<StreamFadeIn>().enabled = true;
       }
             
       if (audioSource.isActiveAndEnabled == true)
@@ -59,7 +65,7 @@ public class WayPoint : MonoBehaviour {
 
         //for testing
         Invoke("NextWaypointPlayer", audioLength);
-        //NextWaypointPlayer();
+       // NextWaypointPlayer();
       }
       else
       {

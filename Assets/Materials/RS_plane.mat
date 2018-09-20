@@ -79,7 +79,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BackgroundSub: 9.7
+    - _BackgroundSub: 14.4
     - _BumpScale: 1
     - _Clip: 1
     - _Cutoff: 0
@@ -88,7 +88,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EdgeOnly: 0.93
-    - _FadeOut: 1
+    - _FadeOut: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
