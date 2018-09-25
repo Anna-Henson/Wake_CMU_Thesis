@@ -27,7 +27,7 @@ Shader "Custom/RSShaderEdge"
 			}
 		
 			ZTest LEqual
-			ZWrite off
+			ZWrite Off
 			Blend SrcAlpha OneMinusSrcAlpha
 			Cull Off
 		
@@ -36,11 +36,12 @@ Shader "Custom/RSShaderEdge"
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma multi_compile_shadowcaster
+			#pragma multi_compile_
 			#pragma target 4.0
 			#pragma glsl
 			#include "UnityCG.cginc"
 			#include "Lighting.cginc"
+			#include "AutoLight.cginc"
 
 
 			struct appdata {
@@ -88,7 +89,8 @@ Shader "Custom/RSShaderEdge"
 				float d = tex.r;
 				o.getRidOfThisPoint = float4(0,0,0,0);
 
-				float rs_planeZDist = 1.5;
+				//Do Not Touch This Number(Change would cause fish eye effect)
+				float rs_planeZDist = 3.5;
 
 				float3 projectionVec = normalize(v.vertex.xyz - float3(0,rs_planeZDist,0));
 
@@ -141,7 +143,7 @@ Shader "Custom/RSShaderEdge"
 				o.getRidOfThisPoint.yzw = o.modelPos.xyz;
 
 				o.modelPos = UnityObjectToClipPos(o.modelPos);		
-				o.worldNormal = mul(v.normal, (float3x3)unity_WorldToObject);
+				o.worldNormal = mul(unity_ObjectToWorld, v.normal);
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				o.uv_MainTex = v.texcoord;
 				return o;
