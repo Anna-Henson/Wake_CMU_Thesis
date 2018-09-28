@@ -77,6 +77,7 @@ public class BindToShader : MonoBehaviour
         }
 
         materialToBind.SetTexture(texToBind,texture);
+
         if (fetchFramesFromDevice)
         {
             if (RealSenseDevice.Instance.processMode == RealSenseDevice.ProcessMode.UnityThread)

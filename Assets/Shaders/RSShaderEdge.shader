@@ -20,7 +20,213 @@ Shader "Custom/RSShaderEdge"
 	}
 
 	SubShader {
+
+			Pass
+			{
+				//Fake Shadow Pass
+				Tags{ "Queue" = "Transparent" "RenderType" = "Transparen" "IgnoreProjector" = "True"  "DisableBatching" = "True" }
+
+				ZTest LEqual
+				Blend DstColor Zero
+				Cull Back
+
+				CGPROGRAM
+
+				#pragma vertex vert
+				#pragma fragment frag
+
+				#include "Assets/Plugins/HxVolumetricLighting/BuiltIn-Replacement/HxVolumetricCore.cginc"
+
+				struct appdata {
+					float4 vertex : POSITION;
+					float4 texcoord : TEXCOORD0;
+				};
+
+				struct v2f {
+					float4 uv_MainTex : TEXCOORD0;
+					float4 modelPos : SV_POSITION;
+					float4 getRidOfThisPoint: TEXCOORD3;
+					float3 worldPos: TEXCOORD5;
+				};
+
+				sampler2D _MainTex;
+				half4 _MainTex_TexelSize;
+				sampler2D _DepthTex;
+				sampler2D _PrevDepthTex;
+				sampler2D _BackgroundTex;
+				float _WindowDistance;
+				float _WindowSize;
+				float _BackgroundSub;
+				float _DepthScale;
+				float _Clip;
+				float _ScanRange;
+
+				//Initiate Edge Detection Variables
+				fixed4 _EdgeColor;
+				float _EdgeOnly;
+				fixed4 _BackgroundColor;
+				float _Sensitivity;
+				float _SampleDistance;
+				//End of Edge Detection Variables
+
+				float _FadeOut;
+
+				v2f vert(appdata v) {
+					v2f o;
+					float2 uv = v.texcoord.xy;
+					float4 tex = tex2Dlod(_DepthTex, float4(v.texcoord.xy, 0, 0));
+
+					float d = tex.r;
+					o.getRidOfThisPoint = float4(0, 0, 0, 0);
+
+					//Do Not Touch This Number(Change would cause fish eye effect)
+					float rs_planeZDist = 3.5;
+
+					float3 projectionVec = normalize(v.vertex.xyz - float3(0, rs_planeZDist, 0));
+
+					if (d == 0) {
+						o.getRidOfThisPoint.x = 1;
+						tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
+						d = tex.r;
+						if (d == 0) {
+
+							float xOffset = 0;
+							float yOffset = 0;
+							float2 dirVector = normalize(float2(0.5 - v.texcoord.x, 0.5 - v.texcoord.y));
+							for (int i = 1; i < 11; i++) {
+
+								xOffset = dirVector.x * (i / 30.);
+								yOffset = dirVector.y * (i / 30.);
+								d = ((tex2Dlod(_DepthTex, float4(v.texcoord.x + xOffset, v.texcoord.y + yOffset, 0, 0))).r);
+								if (d != 0 && d < _BackgroundSub) {
+									break;
+								}
+							}
+							float dd = 0;
+							for (int j = 1; j < 11; j++) {
+								xOffset = dirVector.x * (j / 30.);
+								yOffset = dirVector.y * (j / 30.);
+								dd = ((tex2Dlod(_DepthTex, float4(v.texcoord.x - xOffset, v.texcoord.y - yOffset, 0, 0))).r);
+								if (dd != 0 && dd < _BackgroundSub) {
+									break;
+								}
+							}
+
+							if (dd != 0) {
+								if (d != 0) {
+									d = min(d, dd);
+								}
+								else { // d == 0;
+									d = dd;
+								}
+							}
+							if (d == 0) {
+								d = 1;
+							}
+						}
+
+					}
+
+					d *= _DepthScale;
+					v.vertex.xyz = v.vertex.xyz + d * projectionVec;
+
+					v.vertex.y = -v.vertex.z;
+					v.vertex.z = 0;
+					float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
+					worldPos.y = -18.4;//Rug(1) Y Offset
+					v.vertex = mul(unity_WorldToObject, worldPos);
+
+					o.modelPos.xyz = v.vertex.xyz;
+					o.getRidOfThisPoint.yzw = o.modelPos.xyz;
+
+					o.modelPos = UnityObjectToClipPos(o.modelPos);
+					o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+					o.uv_MainTex = v.texcoord;
+
+					return o;
+				}
+
+				fixed4 frag(v2f IN) : SV_Target{
+
+					fixed4 o;
+					half4 b = tex2D(_DepthTex, IN.uv_MainTex);
+					float2 uv = IN.uv_MainTex;
+
+					////-----------------Edge Detection-------------------------------------------------------------//
+					//half sample1 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(1, 1) * _SampleDistance).r;
+					//half sample2 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(-1, -1) * _SampleDistance).r;
+					//half sample3 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(-1, 1) * _SampleDistance).r;
+					//half sample4 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(1, -1) * _SampleDistance).r;
+
+					//half edge = 1.0;
+
+					//float diffDepth12 = abs(sample1 - sample2) * _Sensitivity;
+					//float diffDepth34 = abs(sample3 - sample4) * _Sensitivity;
+
+					//int isSameDepth12 = diffDepth12 < 0.1 * sample1;
+					//int isSameDepth34 = diffDepth34 < 0.1 * sample3;
+
+					//edge = edge * isSameDepth12 * isSameDepth34;
+					////---------------End of Edge Detection---------------------------------------------------------//
+
+					o.a = _FadeOut;
+
+
+					if (_Clip == 0) {
+						return o;
+					}
+
+					float d = b.r * _DepthScale;
+					float3 correctedPos = IN.getRidOfThisPoint.yzw;
+					float distFromCenter = distance(correctedPos, float3(0, IN.getRidOfThisPoint.z, 0));
+
+
+					if (distFromCenter > 2.5) {
+						o.a = _FadeOut;
+						o.a = clamp(_FadeOut - (distFromCenter - _WindowSize) * 2, 0, _FadeOut);
+					}
+
+					if (IN.getRidOfThisPoint.x == 1) {
+						o.a = 0;
+						discard;
+					}
+					else if (d == 0) {
+						o.a = 0;
+						discard;
+					}
+					else {
+						if (d > _BackgroundSub || d < _BackgroundSub - _ScanRange * _DepthScale) {
+							discard;
+							o.a = 0;
+						}
+
+					}
+
+					//Cutoff the rim of the UV
+					if (IN.uv_MainTex.x <= 0.005 || IN.uv_MainTex.y <= 0.005 || IN.uv_MainTex.x >= 0.995 || IN.uv_MainTex.y >= 0.995) {
+						o.a = 0;
+						discard;
+					}
+
+					////Make Steep Depth Change Edge Transparent
+					//if (edge < 1.0)
+					//{
+					//	o.a = 0;
+					//	discard;
+					//}
+
+					o.rgba = fixed4(0.5,0.5,0.5,1);
+
+					return o;
+
+				}
+
+			ENDCG
+
+		}
+
 		Pass {
+			//Cutout shape pass + ambient lighting
 			Tags
 			{
 				 "Queue"="Transparent" "RenderType"="TransparentCutout" "IgnoreProjector"="True"  "DisableBatching"="True" "LightMode"="ForwardBase"
@@ -42,6 +248,9 @@ Shader "Custom/RSShaderEdge"
 			#include "UnityCG.cginc"
 			#include "Lighting.cginc"
 			#include "AutoLight.cginc"
+			#include "Assets/Plugins/HxVolumetricLighting/BuiltIn-Replacement/HxVolumetricCore.cginc"
+			#pragma multi_compile VTRANSPARENCY_OFF VTRANSPARENCY_ON
+
 
 
 			struct appdata {
@@ -56,6 +265,9 @@ Shader "Custom/RSShaderEdge"
 				float4 getRidOfThisPoint: TEXCOORD3;
 				float3 worldNormal: TEXCOORD4;
 				float3 worldPos: TEXCOORD5;
+				#ifdef VTRANSPARENCY_ON
+					float4 projPos : TEXCOORD2;
+				#endif
 				SHADOW_COORDS(1)
 			};
 
@@ -136,6 +348,8 @@ Shader "Custom/RSShaderEdge"
 						}		
 					}
 
+					
+
 				}
 
 				d *= _DepthScale;
@@ -148,7 +362,12 @@ Shader "Custom/RSShaderEdge"
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				o.uv_MainTex = v.texcoord;
 
-				TRANSFER_SHADOW(o);
+				#ifdef VTRANSPARENCY_ON
+					o.projPos = ComputeScreenPos(v.vertex)
+					COMPUTE_EYEDEPTH(o.projPos.z);
+				#endif
+
+				//TRANSFER_SHADOW(o);
 				return o;
 			}
 
@@ -158,7 +377,7 @@ Shader "Custom/RSShaderEdge"
 				half4 c = tex2D (_MainTex, IN.uv_MainTex);
 				half4 b = tex2D (_DepthTex, IN.uv_MainTex);
 
-				//Calculate Lighting: Lambert
+				//Calculate Lighting: Lambert Ambient
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
 				fixed3 worldNormal = normalize(IN.worldNormal);
 				fixed3 worldLight = normalize(UnityWorldSpaceLightDir(IN.worldPos));
@@ -231,13 +450,19 @@ Shader "Custom/RSShaderEdge"
 				{	
 					o.a = 0;
 				}
-				return o;
+
+				#ifdef VTRANSPARENCY_ON
+					return VolumetricTransparencyBase(o, i.projPos);
+				#else
+					return o;
+				#endif
 			}
 
 			ENDCG
 		}
 
 		Pass{
+			//Cutout Shape + light sources
 			Tags{ "LightMode" = "ForwardAdd" }
 
 			Blend One One
@@ -249,6 +474,8 @@ Shader "Custom/RSShaderEdge"
 
 			#include "Lighting.cginc"
 			#include "AutoLight.cginc"
+			#include "Assets/Plugins/HxVolumetricLighting/BuiltIn-Replacement/HxVolumetricCore.cginc"
+			#pragma multi_compile VTRANSPARENCY_OFF VTRANSPARENCY_ON
 
 			struct appdata {
 				float4 vertex : POSITION;
@@ -262,6 +489,9 @@ Shader "Custom/RSShaderEdge"
 				float4 getRidOfThisPoint: TEXCOORD3;
 				float3 worldNormal: TEXCOORD4;
 				float3 worldPos: TEXCOORD5;
+				#ifdef VTRANSPARENCY_ON
+					float4 projPos : TEXCOORD2;
+				#endif
 				SHADOW_COORDS(1)
 			};
 
@@ -354,6 +584,11 @@ Shader "Custom/RSShaderEdge"
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				o.uv_MainTex = v.texcoord;
 
+				#ifdef VTRANSPARENCY_ON
+								o.projPos = ComputeScreenPos(v.vertex);
+								COMPUTE_EYEDEPTH(o.projPos.z);
+				#endif
+
 				TRANSFER_SHADOW(o);
 				return o;
 			}
@@ -426,6 +661,7 @@ Shader "Custom/RSShaderEdge"
 					discard;
 				}
 
+				//Calculate Lighting Blinn-Phong
 				float3 worldPos = IN.worldPos;
 				fixed3 WorldLight = normalize(UnityWorldSpaceLightDir(worldPos));
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(worldPos));
@@ -436,8 +672,14 @@ Shader "Custom/RSShaderEdge"
 
 				UNITY_LIGHT_ATTENUATION(atten, i, worldPos);
 
-				o.rgb = diffuse * atten * o.a;
-				return o;
+				o.rgb = diffuse * atten * 1.2 * o.a;
+				//End of Lighting
+
+				#ifdef VTRANSPARENCY_ON
+					return VolumetricTransparencyAdd(o, i.projPos);
+				#else
+					return o;
+				#endif
 
 			}
 
@@ -446,6 +688,7 @@ Shader "Custom/RSShaderEdge"
 
 		}
 
+		
 	}
 	
 	FallBack "Transparent/Cutout/VertexLit"
