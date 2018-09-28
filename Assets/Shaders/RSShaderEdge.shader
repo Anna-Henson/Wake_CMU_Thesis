@@ -152,22 +152,22 @@ Shader "Custom/RSShaderEdge"
 					half4 b = tex2D(_DepthTex, IN.uv_MainTex);
 					float2 uv = IN.uv_MainTex;
 
-					////-----------------Edge Detection-------------------------------------------------------------//
-					//half sample1 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(1, 1) * _SampleDistance).r;
-					//half sample2 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(-1, -1) * _SampleDistance).r;
-					//half sample3 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(-1, 1) * _SampleDistance).r;
-					//half sample4 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(1, -1) * _SampleDistance).r;
+					//-----------------Edge Detection-------------------------------------------------------------//
+					half sample1 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(1, 1) * _SampleDistance).r;
+					half sample2 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(-1, -1) * _SampleDistance).r;
+					half sample3 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(-1, 1) * _SampleDistance).r;
+					half sample4 = tex2D(_DepthTex, uv + _MainTex_TexelSize.xy * half2(1, -1) * _SampleDistance).r;
 
-					//half edge = 1.0;
+					half edge = 1.0;
 
-					//float diffDepth12 = abs(sample1 - sample2) * _Sensitivity;
-					//float diffDepth34 = abs(sample3 - sample4) * _Sensitivity;
+					float diffDepth12 = abs(sample1 - sample2) * _Sensitivity;
+					float diffDepth34 = abs(sample3 - sample4) * _Sensitivity;
 
-					//int isSameDepth12 = diffDepth12 < 0.1 * sample1;
-					//int isSameDepth34 = diffDepth34 < 0.1 * sample3;
+					int isSameDepth12 = diffDepth12 < 0.1 * sample1;
+					int isSameDepth34 = diffDepth34 < 0.1 * sample3;
 
-					//edge = edge * isSameDepth12 * isSameDepth34;
-					////---------------End of Edge Detection---------------------------------------------------------//
+					edge = edge * isSameDepth12 * isSameDepth34;
+					//---------------End of Edge Detection---------------------------------------------------------//
 
 					o.a = _FadeOut;
 
@@ -207,13 +207,6 @@ Shader "Custom/RSShaderEdge"
 						o.a = 0;
 						discard;
 					}
-
-					////Make Steep Depth Change Edge Transparent
-					//if (edge < 1.0)
-					//{
-					//	o.a = 0;
-					//	discard;
-					//}
 
 					o.rgba = fixed4(0.5,0.5,0.5,1);
 

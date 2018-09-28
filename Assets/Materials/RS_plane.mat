@@ -27,7 +27,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DepthTex:
-        m_Texture: {fileID: 2800000, guid: f316901789650164491689677fc1dc35, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -47,7 +47,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 0a2abcf98d46da34cb66d087512cd128, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -71,7 +71,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PrevDepthTex:
-        m_Texture: {fileID: 2800000, guid: f316901789650164491689677fc1dc35, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RSPlane:
@@ -79,11 +79,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BackgroundSub: 1.83
+    - _BackgroundSub: 2.01
     - _BumpScale: 1
     - _Clip: 1
     - _Cutoff: 0
-    - _DepthScale: 119.15
+    - _DepthScale: 230.4
     - _DespthScale: 100
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -106,7 +106,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _WindowDistance: -0.7
-    - _WindowSize: 5.5
+    - _WindowSize: 7.75
     - _ZWrite: 1
     m_Colors:
     - _BackgroundColor: {r: 1, g: 1, b: 1, a: 1}
