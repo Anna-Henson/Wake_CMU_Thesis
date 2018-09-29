@@ -7,26 +7,44 @@ public class Trigger : MonoBehaviour,
     IPrerequisite
 {
     private bool m_hasTriggered;
+    private bool m_isSatisfied = false;
 
     public bool IsSatisfied()
     {
-        return m_hasTriggered;
+        return m_isSatisfied;
     }
 
-    public Action triggerCallback;
+    public Action<Action> triggerAction;
 
     public List<Trigger> dependencies;
 
-    public void ToTrigger()
+    public bool ToTrigger()
     {
+        // If has been triggered and under processing, ignore the further trigger
+        if (m_hasTriggered)
+            return false;
+        m_hasTriggered = true;
+
         foreach (var dependency in dependencies)
         {
             if (dependency.IsSatisfied() == false)
-                return;
+            {
+                print(dependency.gameObject.name + " is not satisfied");
+                return false;
+            }
         }
 
         // Do something about the actual content
-        triggerCallback();
+        if (triggerAction != null)
+            triggerAction(TriggeredCallback);
+
+        return true;
+    }
+
+    private void TriggeredCallback()
+    {
+        print(this.name + " has been triggered");
+        m_isSatisfied = true;
     }
 
     // Use this for initialization
@@ -43,6 +61,7 @@ public class Trigger : MonoBehaviour,
 
     private void OnTriggerEnter(Collider other)
     {
-        print(this.transform.parent.name + " Collide with " + other.name);
+        ToTrigger();
+        //print(this.transform.parent.name + " Collide with " + other.name);
     }
 }
