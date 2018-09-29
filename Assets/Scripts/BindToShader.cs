@@ -41,10 +41,13 @@ public class BindToShader : MonoBehaviour
     {
         texture = Texture2D.blackTexture;
         prevTexture = Texture2D.blackTexture;
-        if (RealSenseDevice.Instance.ActiveProfile != null)
-            OnStartStreaming(RealSenseDevice.Instance.ActiveProfile);
-        else
-            RealSenseDevice.Instance.OnStart += OnStartStreaming;
+        if (RealSenseDevice.Instance)
+        {
+            if (RealSenseDevice.Instance.ActiveProfile != null)
+                OnStartStreaming(RealSenseDevice.Instance.ActiveProfile);
+            else
+                RealSenseDevice.Instance.OnStart += OnStartStreaming;
+        }
     }
 
     private void OnStartStreaming(PipelineProfile activeProfile)
