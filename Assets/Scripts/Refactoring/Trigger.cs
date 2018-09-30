@@ -14,9 +14,10 @@ public class Trigger : MonoBehaviour,
         return m_isSatisfied;
     }
 
-    public Action<Action> triggerAction;
+    public Action<Trigger> triggerAction;
 
     public List<Trigger> dependencies;
+    public int id;
 
     public bool ToTrigger()
     {
@@ -36,12 +37,12 @@ public class Trigger : MonoBehaviour,
 
         // Do something about the actual content
         if (triggerAction != null)
-            triggerAction(TriggeredCallback);
+            triggerAction(this);
 
         return true;
     }
 
-    private void TriggeredCallback()
+    public void TriggeredCallback()
     {
         print(this.name + " has been triggered");
         m_isSatisfied = true;
