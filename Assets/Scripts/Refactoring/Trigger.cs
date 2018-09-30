@@ -6,6 +6,8 @@ using System;
 public class Trigger : MonoBehaviour,
     IPrerequisite
 {
+    public TriggerMgr mgr;
+
     private bool m_hasTriggered;
     private bool m_isSatisfied = false;
 
@@ -14,7 +16,7 @@ public class Trigger : MonoBehaviour,
         return m_isSatisfied;
     }
 
-    public Action<Trigger> triggerAction;
+    public Action<TriggerMgr, Trigger> triggerAction;
 
     public List<Trigger> dependencies;
     public int id;
@@ -24,7 +26,6 @@ public class Trigger : MonoBehaviour,
         // If has been triggered and under processing, ignore the further trigger
         if (m_hasTriggered)
             return false;
-        m_hasTriggered = true;
 
         foreach (var dependency in dependencies)
         {
@@ -34,10 +35,11 @@ public class Trigger : MonoBehaviour,
                 return false;
             }
         }
+        m_hasTriggered = true;
 
         // Do something about the actual content
         if (triggerAction != null)
-            triggerAction(this);
+            triggerAction(mgr, this);
 
         return true;
     }

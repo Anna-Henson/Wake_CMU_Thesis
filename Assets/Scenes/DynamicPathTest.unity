@@ -1014,6 +1014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!1 &600599811
@@ -1187,6 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!1 &643046830
@@ -1199,7 +1201,6 @@ GameObject:
   - component: {fileID: 643046832}
   - component: {fileID: 643046831}
   - component: {fileID: 643046833}
-  - component: {fileID: 643046834}
   - component: {fileID: 643046835}
   m_Layer: 0
   m_Name: WayPoint 0
@@ -1328,27 +1329,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &643046834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 643046830}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1dcaeb4b2dc4c14692eb5726bf1a0e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  playerLineData: {fileID: 0}
-  dancerLineData: {fileID: 0}
-  activateKey: 49
-  tableLight: {fileID: 0}
-  curvePlayer: {fileID: 0}
-  trackerPlayer: {fileID: 0}
-  curveDancer: {fileID: 0}
-  trackerDancer: {fileID: 0}
-  firstPoint: {fileID: 0}
 --- !u!114 &643046835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1360,6 +1340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!1 &830841578
@@ -1618,6 +1599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!1 &1053522559
@@ -1858,6 +1840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!114 &1059605041
@@ -2128,6 +2111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!1 &1297430676
@@ -2301,6 +2285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!1 &1520909632
@@ -2568,7 +2553,7 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: f30394f19bc769640ae788b7ba5d26b5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2705,9 +2690,9 @@ MonoBehaviour:
   player: {fileID: 1550549434}
   onLeft: 1
   startSampleId: 0
-  speed: 6
+  speed: 0
   sampleCountInArc: 50
-  renderSampleCount: 25
+  renderSampleCount: 50
 --- !u!1 &1700214398
 GameObject:
   m_ObjectHideFlags: 0
@@ -2879,6 +2864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2698e363dfecc409e493cff238374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mgr: {fileID: 0}
   dependencies: []
   id: 0
 --- !u!1 &1892785338
