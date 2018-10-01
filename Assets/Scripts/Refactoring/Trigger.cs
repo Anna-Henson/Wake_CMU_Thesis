@@ -21,6 +21,17 @@ public class Trigger : MonoBehaviour,
     public List<Trigger> dependencies;
     public int id;
 
+    public bool ForceTrigger()
+    {
+        m_hasTriggered = true;
+
+        // Do something about the actual content
+        if (triggerAction != null)
+            triggerAction(mgr, this);
+
+        return true;
+    }
+
     public bool ToTrigger()
     {
         // If has been triggered and under processing, ignore the further trigger

@@ -6,8 +6,21 @@ using System.Collections;
 
 public class TriggerMgr : MonoBehaviour
 {
+    private List<KeyCode> keys = new List<KeyCode>()
+    {
+        KeyCode.Alpha1,
+        KeyCode.Alpha2,
+        KeyCode.Alpha3,
+        KeyCode.Alpha4,
+        KeyCode.Alpha5,
+        KeyCode.Alpha6,
+        KeyCode.Alpha7,
+    };
     public TasiYokan.Curve.BezierCurve curve;
     public PlayerPathDrawer playerDrawer;
+
+    // current playing audio
+    private AudioSource audio;
 
     private static int m_bufferLength;
     public static int BufferLength
@@ -107,7 +120,7 @@ public class TriggerMgr : MonoBehaviour
     {
         LineRenderer line = curve.GetComponent<LineRenderer>();
         line.enabled = false;
-        AudioSource audio = _trigger.GetComponent<AudioSource>();
+        audio = _trigger.GetComponent<AudioSource>();
         if (audio == null)
             yield return null;
         else
@@ -148,5 +161,23 @@ public class TriggerMgr : MonoBehaviour
 
         }
         int a = 1;
+    }
+
+    private void Update()
+    {
+        for (int i = 0; i < keys.Count; ++i)
+        {
+            if (Input.GetKeyDown(keys[i]))
+            {
+                print("Manually trigger " + keys[i]);
+                if (audio != null)
+                    audio.Stop();
+                StopAllCoroutines();
+
+                if (i > 0)
+                    SetAnchorToNext(triggers[i - 1]);
+                triggers[i].ForceTrigger();
+            }
+        }
     }
 }
