@@ -612,7 +612,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   webGLLinkerTarget: 0
   scriptingDefineSymbols:
-    1: IS_PC
+    1: 
   platformArchitecture: {}
   scriptingBackend:
     Standalone: 0

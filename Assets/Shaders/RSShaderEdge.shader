@@ -24,13 +24,16 @@ Shader "Custom/RSShaderEdge"
 			Pass
 			{
 				//Fake Shadow Pass
-				Tags{ "Queue" = "Transparent" "RenderType" = "Transparen" "IgnoreProjector" = "True"  "DisableBatching" = "True" }
+				Tags{ "Queue" = "AlphaTest" "RenderType" = "Transparent" "IgnoreProjector" = "True"  "DisableBatching" = "True" }
 
 				ZTest LEqual
 				Blend DstColor Zero
 				Cull Back
+				
+				AlphaToMask On
 
 				CGPROGRAM
+
 
 				#pragma vertex vert
 				#pragma fragment frag
@@ -47,6 +50,7 @@ Shader "Custom/RSShaderEdge"
 					float4 modelPos : SV_POSITION;
 					float4 getRidOfThisPoint: TEXCOORD3;
 					float3 worldPos: TEXCOORD5;
+					float2 parameters : TEXCOORD1;//parameters.x = transparency; parameters.y = distance to ground
 				};
 
 				sampler2D _MainTex;
@@ -83,7 +87,7 @@ Shader "Custom/RSShaderEdge"
 					float rs_planeZDist = 3.5;
 
 					float3 projectionVec = normalize(v.vertex.xyz - float3(0, rs_planeZDist, 0));
-
+					
 					if (d == 0) {
 						o.getRidOfThisPoint.x = 1;
 						tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
@@ -130,16 +134,31 @@ Shader "Custom/RSShaderEdge"
 					d *= _DepthScale;
 					v.vertex.xyz = v.vertex.xyz + d * projectionVec;
 
+					float3 center = float3(0, 0, 0) + d * normalize(float3(0, 0, 0) - float3(0, rs_planeZDist, 0));
+					
+					//Window Cropping
+					float distFromCenter = distance(v.vertex.xyz, float3(0, v.vertex.y, 0));
+
+					if (distFromCenter > 2.5) {
+						o.parameters.x = _FadeOut;
+						o.parameters.x = clamp(1 - (distFromCenter - _WindowSize) * 2, 0, _FadeOut);
+					}
+
 					v.vertex.y = -v.vertex.z;
 					v.vertex.z = 0;
 					float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
-					worldPos.y = -18.4;//Rug(1) Y Offset
+					o.parameters.y = worldPos.y - (-18.4);
 					v.vertex = mul(unity_WorldToObject, worldPos);
 
-					o.modelPos.xyz = v.vertex.xyz;
+					v.vertex.x = v.vertex.x * clamp((pow(2.5,-(o.parameters.y / 5)) + 1), 1, 1.5);
+					v.vertex.y = v.vertex.y * clamp((pow(2.5, -(o.parameters.y / 5)) + 1), 1, 1.5) + center.y;
+					float4 worldPos2 = mul(unity_ObjectToWorld, v.vertex);
+					worldPos.y = -18.4;
+					o.modelPos.xyz = worldPos;
 					o.getRidOfThisPoint.yzw = o.modelPos.xyz;
+				
 
-					o.modelPos = UnityObjectToClipPos(o.modelPos);
+					o.modelPos = UnityWorldToClipPos(o.modelPos);
 					o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 					o.uv_MainTex = v.texcoord;
 
@@ -170,21 +189,13 @@ Shader "Custom/RSShaderEdge"
 					//---------------End of Edge Detection---------------------------------------------------------//
 
 					o.a = _FadeOut;
-
+					float d = b.r * _DepthScale;
 
 					if (_Clip == 0) {
 						return o;
 					}
 
-					float d = b.r * _DepthScale;
-					float3 correctedPos = IN.getRidOfThisPoint.yzw;
-					float distFromCenter = distance(correctedPos, float3(0, IN.getRidOfThisPoint.z, 0));
-
-
-					if (distFromCenter > 2.5) {
-						o.a = _FadeOut;
-						o.a = clamp(_FadeOut - (distFromCenter - _WindowSize) * 2, 0, _FadeOut);
-					}
+					o.a = IN.parameters.x;
 
 					if (IN.getRidOfThisPoint.x == 1) {
 						o.a = 0;
@@ -208,7 +219,7 @@ Shader "Custom/RSShaderEdge"
 						discard;
 					}
 
-					o.rgba = fixed4(0.5,0.5,0.5,1);
+					o.rgb = fixed3(0.4,0.4,0.4);
 
 					return o;
 
@@ -299,51 +310,55 @@ Shader "Custom/RSShaderEdge"
 				float rs_planeZDist = 3.5;
 
 				float3 projectionVec = normalize(v.vertex.xyz - float3(0,rs_planeZDist,0));
-
-				if (d == 0){
+				if (d == 0) {
 					o.getRidOfThisPoint.x = 1;
 					tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
 					d = tex.r;
-					if (d == 0){
-					
-						float xOffset = 0;
-						float yOffset = 0;
-						float2 dirVector = normalize(float2(0.5- v.texcoord.x, 0.5 - v.texcoord.y));
-						for(int i = 1 ; i < 11; i ++){
-						
-							xOffset = dirVector.x * (i/30.);
-							yOffset = dirVector.y * (i/30.);
-							d = ((tex2Dlod(_DepthTex, float4(v.texcoord.x + xOffset, v.texcoord.y + yOffset, 0, 0))).r);
-							if (d != 0 && d < _BackgroundSub){
-								break;
-							}
-						}
-						float dd = 0;
-						for(int j = 1 ; j < 11; j ++){
-							xOffset = dirVector.x * (j/30.);
-							yOffset = dirVector.y * (j/30.);
-							dd = ((tex2Dlod(_DepthTex, float4(v.texcoord.x - xOffset, v.texcoord.y - yOffset, 0, 0))).r);
-							if (dd != 0 && dd < _BackgroundSub){
-								break;
-							}
-						}
-
-						if(dd != 0){
-							if (d != 0){
-								d = min(d,dd);
-							}
-							else{ // d == 0;
-								d = dd;
-							}
-						}
-						if (d == 0){
-							d = 1;
-						}		
-					}
-
-					
-
 				}
+				//if (d == 0){
+				//	o.getRidOfThisPoint.x = 1;
+				//	tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
+				//	d = tex.r;
+				//	if (d == 0){
+				//	
+				//		float xOffset = 0;
+				//		float yOffset = 0;
+				//		float2 dirVector = normalize(float2(0.5- v.texcoord.x, 0.5 - v.texcoord.y));
+				//		for(int i = 1 ; i < 11; i ++){
+				//		
+				//			xOffset = dirVector.x * (i/30.);
+				//			yOffset = dirVector.y * (i/30.);
+				//			d = ((tex2Dlod(_DepthTex, float4(v.texcoord.x + xOffset, v.texcoord.y + yOffset, 0, 0))).r);
+				//			if (d != 0 && d < _BackgroundSub){
+				//				break;
+				//			}
+				//		}
+				//		float dd = 0;
+				//		for(int j = 1 ; j < 11; j ++){
+				//			xOffset = dirVector.x * (j/30.);
+				//			yOffset = dirVector.y * (j/30.);
+				//			dd = ((tex2Dlod(_DepthTex, float4(v.texcoord.x - xOffset, v.texcoord.y - yOffset, 0, 0))).r);
+				//			if (dd != 0 && dd < _BackgroundSub){
+				//				break;
+				//			}
+				//		}
+
+				//		if(dd != 0){
+				//			if (d != 0){
+				//				d = min(d,dd);
+				//			}
+				//			else{ // d == 0;
+				//				d = dd;
+				//			}
+				//		}
+				//		if (d == 0){
+				//			d = 1;
+				//		}		
+				//	}
+
+					
+
+				//}
 
 				d *= _DepthScale;
 				v.vertex.xyz = v.vertex.xyz + d * projectionVec;
@@ -414,7 +429,7 @@ Shader "Custom/RSShaderEdge"
 			
 				if (distFromCenter > 2.5){
 					o.a = _FadeOut;
-					o.a = clamp(_FadeOut-(distFromCenter - _WindowSize)*2,0,_FadeOut);
+					o.a = clamp(1-(distFromCenter - _WindowSize)*2,0,_FadeOut);
 				}
 
 				if(IN.getRidOfThisPoint.x == 1){
@@ -622,7 +637,7 @@ Shader "Custom/RSShaderEdge"
 
 				if (distFromCenter > 2.5) {
 					o.a = _FadeOut;
-					o.a = clamp(_FadeOut - (distFromCenter - _WindowSize) * 2, 0, _FadeOut);
+					o.a = clamp(1 - (distFromCenter - _WindowSize) * 2, 0, _FadeOut);
 				}
 
 				if (IN.getRidOfThisPoint.x == 1) {
