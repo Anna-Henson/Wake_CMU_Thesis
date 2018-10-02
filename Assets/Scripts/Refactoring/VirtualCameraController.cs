@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class VirtualCameraController : MonoBehaviour
 {
-
-    Vector2 mouseLook;
-    Vector2 smoothV;
+    private Vector2 mouseLook;
+    private Vector2 smoothV;
     public float sensitivity = 5.0f;
     public float smoothing = 2.0f;
-
-    GameObject character;
+    private GameObject character;
 
     public float speed = 10.0F;
     private float normalSpeed;
@@ -47,7 +45,7 @@ public class VirtualCameraController : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         //Cursor.lockState = CursorLockMode.Locked;
         character = MoveTarget.gameObject;
@@ -56,7 +54,7 @@ public class VirtualCameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (enableMouseControl)
             UpdateRotationByMouse();
@@ -79,7 +77,7 @@ public class VirtualCameraController : MonoBehaviour
 
         Vector3 moveDir = new Vector3(straffe, 0, translation);
 
-        MoveTarget.Translate(RotTarget.rotation * moveDir, Space.World);
+        MoveTarget.Translate((RotTarget.rotation * moveDir).SetY(0), Space.World);
 
         if (Input.GetKeyDown("escape"))
             Cursor.lockState = CursorLockMode.None;
@@ -101,7 +99,7 @@ public class VirtualCameraController : MonoBehaviour
         }
         else
         {
-            RotTarget.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
+            RotTarget.localRotation = Quaternion.AngleAxis(Mathf.Clamp(-mouseLook.y, -30, 30), Vector3.right);
         }
         MoveTarget.localRotation = Quaternion.AngleAxis(mouseLook.x, MoveTarget.up);
     }
