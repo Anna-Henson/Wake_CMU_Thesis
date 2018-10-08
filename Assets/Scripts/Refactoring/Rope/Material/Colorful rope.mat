@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Colorful rope
-  m_Shader: {fileID: 4800000, guid: 3f14d777b8d0b1c48ac58f48ecfa7535, type: 3}
+  m_Shader: {fileID: 4800000, guid: b0f37d78a80b0ae48810b84065fd01a4, type: 3}
   m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -80,7 +80,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.4
     - _GlossyReflections: 1
-    - _InvFade: 0.5
+    - _InvFade: 0.28
     - _LightingEnabled: 0
     - _MaxSteps: 300
     - _Metallic: 0
@@ -109,4 +109,4 @@ Material:
     - _InsideColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutsideColor: {r: 0, g: 0, b: 0, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
-    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.9372549}
+    - _TintColor: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 0.92941177}
