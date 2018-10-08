@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
-Shader "Custom/RSShaderEdge" 
+Shader "Custom/RSShaderOnTop" 
 {
 	Properties {
 		_MainTex ("Base (RGB), Alpha (A)", 2D) = "white" {}
@@ -236,7 +236,7 @@ Shader "Custom/RSShaderEdge"
 				 "Queue"="Transparent" "RenderType"="Transparent" "DisableBatching"="True" "LightMode"="ForwardBase"
 			}
 		
-			ZTest LEqual
+			ZTest Off
 			ZWrite Off
 			Blend SrcAlpha OneMinusSrcAlpha
 			Cull Off

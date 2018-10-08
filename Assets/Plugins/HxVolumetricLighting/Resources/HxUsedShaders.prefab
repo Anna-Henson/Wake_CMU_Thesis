@@ -21,7 +21,7 @@ MonoBehaviour:
   HeightFogOff: 1
   Noise: 1
   NoiseOff: 1
-  Transparency: 0
+  Transparency: 1
   TransparencyOff: 1
   DensityParticles: 1
   Point: 1
@@ -35,7 +35,7 @@ MonoBehaviour:
   HeightFogOffLast: 1
   NoiseLast: 1
   NoiseOffLast: 1
-  TransparencyLast: 0
+  TransparencyLast: 1
   TransparencyOffLast: 1
   DensityParticlesLast: 1
   PointLast: 1
