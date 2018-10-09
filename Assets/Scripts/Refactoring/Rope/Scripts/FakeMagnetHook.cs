@@ -103,6 +103,31 @@ public class FakeMagnetHook : MonoBehaviour
         yield return null;
     }
 
+    public IEnumerator AttachHookAsChildAfter(Transform _target)
+    {
+        //print("Hook to " + _target + " "+ _target.position);
+        rope.GetComponent<MeshRenderer>().enabled = true;
+        //rope.gameObject.SetActive(true);
+        float dist = (_target.position - targetHandle.transform.position).magnitude;
+        while (dist > 0.01f)
+        {
+            //targetHandle.transform.position = Vector3.Lerp(targetHandle.transform.position, _target.position, 0.15f);
+            //targetHandle.transform.Translate((_target.position - targetHandle.transform.position) * 0.05f);
+            targetHandle.transform.position = targetHandle.transform.position + ((_target.position - targetHandle.transform.position) * 0.05f);
+            dist = (_target.position - targetHandle.transform.position).magnitude;
+            //print("dist " + dist);
+            yield return null;
+        }
+        //print("reach " + targetHandle.transform.position);
+
+        targetHandle.transform.position = _target.position;
+        targetHandle.transform.parent = _target;
+        targetHandle.transform.localPosition = Vector3.zero;
+
+        attached = true;
+        yield return null;
+    }
+
     public void SetBackToOriginParent()
     {
         targetHandle.transform.parent = transform.parent;

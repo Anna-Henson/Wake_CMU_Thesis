@@ -147,13 +147,13 @@ Shader "Custom/RSShaderEdge"
 					v.vertex.y = -v.vertex.z;
 					v.vertex.z = 0;
 					float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
-					o.parameters.y = worldPos.y - (-18.4);
+					o.parameters.y = worldPos.y - (0);
 					v.vertex = mul(unity_WorldToObject, worldPos);
 
 					v.vertex.x = v.vertex.x * clamp((pow(2.5,-(o.parameters.y / 5)) + 1), 1, 1.5);
 					v.vertex.y = v.vertex.y * clamp((pow(2.5, -(o.parameters.y / 5)) + 1), 1, 1.5) + center.y;
 					float4 worldPos2 = mul(unity_ObjectToWorld, v.vertex);
-					worldPos.y = -18.4;
+					worldPos.y = 0;
 					o.modelPos.xyz = worldPos;
 					o.getRidOfThisPoint.yzw = o.modelPos.xyz;
 				

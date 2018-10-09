@@ -164,14 +164,14 @@ public class TriggerMgr : MonoBehaviour
         else
         {
             audio.Play();
-            //while (audio.timeSamples + BufferLength < audio.clip.samples)
-            //{
-            //    yield return null;
-            //}
+            while (audio.timeSamples + BufferLength < audio.clip.samples)
+            {
+                yield return null;
+            }
 
             // For quick debug only
-            yield return new WaitForSeconds(3);
-            audio.Stop();
+            //yield return new WaitForSeconds(3);
+            //audio.Stop();
 
             _callback();
         }
@@ -201,7 +201,7 @@ public class TriggerMgr : MonoBehaviour
 
     private void ConnectToDancer()
     {
-        hook.StartCoroutine(hook.AttachHookAsChild(dancer));
+        hook.StartCoroutine(hook.AttachHookAsChildAfter(dancer));
     }
 
     private void Start()
