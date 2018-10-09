@@ -8,6 +8,7 @@ public class TriggerMgr : MonoBehaviour
 {
     private List<KeyCode> keys = new List<KeyCode>()
     {
+        KeyCode.Alpha0,
         KeyCode.Alpha1,
         KeyCode.Alpha2,
         KeyCode.Alpha3,
@@ -15,9 +16,15 @@ public class TriggerMgr : MonoBehaviour
         KeyCode.Alpha5,
         KeyCode.Alpha6,
         KeyCode.Alpha7,
+        KeyCode.Alpha8
     };
     public TasiYokan.Curve.BezierCurve curve;
     public PlayerPathDrawer playerDrawer;
+    public MeshRenderer RS_PlaneRenderer;
+    public Shader RS_Shader_OnTop;
+    public FakeMagnetHook hook;
+    public Transform anotherTracker;
+    public Transform dancer;
 
     // current playing audio
     private AudioSource audio;
@@ -45,9 +52,11 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("0");
 
-            mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
+            mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 0");
+                // Here we enter Stage2 where we connect the player to next way point, until we reach waypoint03(#4 indeed)
+                mgr.hook.SetBackToOriginParent();
                 mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
             }));
@@ -55,7 +64,7 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("1");
 
-            mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
+            mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 1");
                 mgr.SetAnchorToNext(trigger);
@@ -65,7 +74,7 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("2");
 
-            mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
+            mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 2");
                 mgr.SetAnchorToNext(trigger);
@@ -75,7 +84,9 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("3");
 
-            mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
+            mgr.StartCoroutine(mgr.FadeOut(5f));
+
+            mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 3");
                 mgr.SetAnchorToNext(trigger);
@@ -85,11 +96,14 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("4");
 
-            mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
+            mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 4");
-                mgr.SetAnchorToNext(trigger);
+                //mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
+
+                // Here we enter Stage3, we connect the player and dancer
+                mgr.ConnectToDancer();
             }));
         },
         (mgr, trigger)=>{
@@ -107,19 +121,47 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("7");
 
-            mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
+            mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 7");
                 mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
             }));
         },
+        (mgr, trigger)=>{
+            print("8");
+
+            mgr.RS_PlaneRenderer.material.shader = mgr.RS_Shader_OnTop;
+            //mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
+            //{
+            //    print("Complete 8");
+            //    mgr.SetAnchorToNext(trigger);
+            //    trigger.TriggeredCallback();
+            //}));
+        },
     };
 
-    private IEnumerator PlayAudio(Trigger _trigger, Action _callback)
+    private IEnumerator FadeOut(float _duration)
     {
+        float startTime = Time.time;
+        while (Time.time < startTime + _duration)
+        {
+            RS_PlaneRenderer.material.SetFloat("_FadeOut", (Time.time - startTime) / _duration);
+            yield return null;
+        }
+    }
+
+    private IEnumerator ReachWaypointAndPlayAudio(Trigger _trigger, Action _callback)
+    {
+        // TODO: useless line///////////
         LineRenderer line = curve.GetComponent<LineRenderer>();
         line.enabled = false;
+        ///////////////////////////////
+
+        // Once you reach the way point, you should hide the hook
+        hook.DetachHook();
+
+        // Start play audio and wait until end
         audio = _trigger.GetComponent<AudioSource>();
         if (audio == null)
             yield return null;
@@ -137,16 +179,43 @@ public class TriggerMgr : MonoBehaviour
 
     private void SetAnchorToNext(Trigger curTrigger)
     {
+        // Has already reached the end
+        if (curTrigger.id >= triggers.Count - 1)
+            return;
+
+        // TODO: Currently these are useless//////////
         // Set bezier to next trigger point as its target
         curve.SetAnchorPosition(1, triggers[curTrigger.id + 1].transform.position);
 
         Vector3 targetOutDir = (playerDrawer.player.position - curve.Points[1].Position).SetY(0);
         playerDrawer.onLeft = Vector3.Cross(playerDrawer.player.forward.SetY(0), targetOutDir).y.Sgn();
+        //////////////////////////////////////////////
+
+        // Attach the magnet hook
+        ConnectToWaypoint(triggers[curTrigger.id + 1].transform);
+    }
+
+    private void ConnectTwoTrackers()
+    {
+        hook.StartCoroutine(hook.AttachHookAsChild(anotherTracker));
+    }
+
+    private void ConnectToWaypoint(Transform target)
+    {
+        hook.StartCoroutine(hook.AttachHook(target));
+    }
+
+    private void ConnectToDancer()
+    {
+        hook.StartCoroutine(hook.AttachHook(dancer));
     }
 
     private void Start()
     {
         triggers = GetComponentsInChildren<Trigger>().ToList();
+
+        // On Stage1, we connect the two trackers of player
+        ConnectTwoTrackers();
 
         for (int i = 0; i < triggers.Count; ++i)
         {
@@ -160,7 +229,6 @@ public class TriggerMgr : MonoBehaviour
                 triggers[i].dependencies.Add(triggers[i - 1]);
 
         }
-        int a = 1;
     }
 
     private void Update()
