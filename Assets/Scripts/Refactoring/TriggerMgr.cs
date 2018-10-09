@@ -153,10 +153,6 @@ public class TriggerMgr : MonoBehaviour
 
     private IEnumerator ReachWaypointAndPlayAudio(Trigger _trigger, Action _callback)
     {
-        // TODO: useless line///////////
-        LineRenderer line = curve.GetComponent<LineRenderer>();
-        line.enabled = false;
-        ///////////////////////////////
 
         // Once you reach the way point, you should hide the hook
         hook.DetachHook();
@@ -168,11 +164,15 @@ public class TriggerMgr : MonoBehaviour
         else
         {
             audio.Play();
-            while (audio.timeSamples + BufferLength < audio.clip.samples)
-            {
-                yield return null;
-            }
-            line.enabled = true;
+            //while (audio.timeSamples + BufferLength < audio.clip.samples)
+            //{
+            //    yield return null;
+            //}
+
+            // For quick debug only
+            yield return new WaitForSeconds(1);
+            audio.Stop();
+
             _callback();
         }
     }
@@ -182,14 +182,6 @@ public class TriggerMgr : MonoBehaviour
         // Has already reached the end
         if (curTrigger.id >= triggers.Count - 1)
             return;
-
-        // TODO: Currently these are useless//////////
-        // Set bezier to next trigger point as its target
-        curve.SetAnchorPosition(1, triggers[curTrigger.id + 1].transform.position);
-
-        Vector3 targetOutDir = (playerDrawer.player.position - curve.Points[1].Position).SetY(0);
-        playerDrawer.onLeft = Vector3.Cross(playerDrawer.player.forward.SetY(0), targetOutDir).y.Sgn();
-        //////////////////////////////////////////////
 
         // Attach the magnet hook
         ConnectToWaypoint(triggers[curTrigger.id + 1].transform);
