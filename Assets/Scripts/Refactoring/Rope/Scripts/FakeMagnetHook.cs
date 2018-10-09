@@ -38,6 +38,16 @@ public class FakeMagnetHook : MonoBehaviour
         }
     }
 
+    public void AttachHookStatic(Transform _target)
+    {
+        //print("Hook to " + _target + " "+ _target.position);
+        rope.GetComponent<MeshRenderer>().enabled = true;
+
+        targetHandle.transform.position = _target.position;
+
+        attached = true;
+    }
+
     public IEnumerator AttachHook(Transform _target)
     {
         //print("Hook to " + _target + " "+ _target.position);
@@ -47,7 +57,8 @@ public class FakeMagnetHook : MonoBehaviour
         while (dist > 0.01f)
         {
             //targetHandle.transform.position = Vector3.Lerp(targetHandle.transform.position, _target.position, 0.15f);
-            targetHandle.transform.Translate((_target.position - targetHandle.transform.position) * 0.10f);
+            //targetHandle.transform.Translate((_target.position - targetHandle.transform.position) * 0.05f);
+            targetHandle.transform.position = targetHandle.transform.position + ((_target.position - targetHandle.transform.position) * 0.05f);
             dist = (_target.position - targetHandle.transform.position).magnitude;
             //print("dist " + dist);
             yield return null;
@@ -57,6 +68,7 @@ public class FakeMagnetHook : MonoBehaviour
         targetHandle.transform.position = _target.position;
 
         attached = true;
+        yield return null;
     }
 
     public IEnumerator AttachHook(Vector3 _targetPos)
@@ -94,6 +106,9 @@ public class FakeMagnetHook : MonoBehaviour
     public void SetBackToOriginParent()
     {
         targetHandle.transform.parent = transform.parent;
+        targetHandle.transform.position = transform.position + transform.forward;
+        //targetHandle.transform.localPosition = Vector3.zero;
+        SetToHidePos();
     }
 
     public void DetachHook()

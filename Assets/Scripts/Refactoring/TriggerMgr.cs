@@ -170,7 +170,7 @@ public class TriggerMgr : MonoBehaviour
             //}
 
             // For quick debug only
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(3);
             audio.Stop();
 
             _callback();
@@ -194,12 +194,14 @@ public class TriggerMgr : MonoBehaviour
 
     private void ConnectToWaypoint(Transform target)
     {
+        print("Connect " + target.name);
         hook.StartCoroutine(hook.AttachHook(target));
+        //hook.AttachHookStatic(target);
     }
 
     private void ConnectToDancer()
     {
-        hook.StartCoroutine(hook.AttachHook(dancer));
+        hook.StartCoroutine(hook.AttachHookAsChild(dancer));
     }
 
     private void Start()
