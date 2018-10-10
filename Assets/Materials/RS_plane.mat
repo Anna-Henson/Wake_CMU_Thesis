@@ -83,7 +83,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BackgroundSub: 4.59
+    - _BackgroundSub: 4.76
     - _BumpScale: 1
     - _Clip: 1
     - _Cutoff: 0
@@ -111,7 +111,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _WindowDistance: -0.7
-    - _WindowSize: 6.49
+    - _WindowSize: 4.08
     - _ZWrite: 1
     m_Colors:
     - _BackgroundColor: {r: 1, g: 1, b: 1, a: 1}
