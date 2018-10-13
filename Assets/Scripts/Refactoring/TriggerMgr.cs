@@ -134,13 +134,13 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("5");
 
-            mgr.SetAnchorToNext(trigger);
+            //mgr.SetAnchorToNext(trigger);
             trigger.TriggeredCallback();
         },
         (mgr, trigger)=>{
             print("6");
 
-            mgr.SetAnchorToNext(trigger);
+            //mgr.SetAnchorToNext(trigger);
             trigger.TriggeredCallback();
         },
         (mgr, trigger)=>{
@@ -149,7 +149,7 @@ public class TriggerMgr : MonoBehaviour
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 7");
-                mgr.SetAnchorToNext(trigger);
+                //mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
             }));
         },

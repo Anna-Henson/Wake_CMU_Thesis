@@ -41,7 +41,8 @@ public class FakeMagnetHook : MonoBehaviour
     public void AttachHookStatic(Transform _target)
     {
         //print("Hook to " + _target + " "+ _target.position);
-        rope.GetComponent<MeshRenderer>().enabled = true;
+        //rope.GetComponent<MeshRenderer>().enabled = true;
+        StartCoroutine(FadeinRope(3));
 
         targetHandle.transform.position = _target.position;
 
@@ -51,7 +52,8 @@ public class FakeMagnetHook : MonoBehaviour
     public IEnumerator AttachHook(Transform _target)
     {
         //print("Hook to " + _target + " "+ _target.position);
-        rope.GetComponent<MeshRenderer>().enabled = true;
+        //rope.GetComponent<MeshRenderer>().enabled = true;
+        StartCoroutine(FadeinRope(3));
         //rope.gameObject.SetActive(true);
         float dist = (_target.position - targetHandle.transform.position).magnitude;
         while (dist > 0.01f)
@@ -74,7 +76,8 @@ public class FakeMagnetHook : MonoBehaviour
     public IEnumerator AttachHook(Vector3 _targetPos)
     {
         //print("Hook to " + _target + " "+ _target.position);
-        rope.GetComponent<MeshRenderer>().enabled = true;
+        //rope.GetComponent<MeshRenderer>().enabled = true;
+        StartCoroutine(FadeinRope(3));
         //rope.gameObject.SetActive(true);
         float dist = (_targetPos - targetHandle.transform.position).magnitude;
         while (dist > 0.01f)
@@ -97,7 +100,8 @@ public class FakeMagnetHook : MonoBehaviour
         targetHandle.transform.parent = _target;
         targetHandle.transform.localPosition = Vector3.zero;
 
-        rope.GetComponent<MeshRenderer>().enabled = true;
+        //rope.GetComponent<MeshRenderer>().enabled = true;
+        StartCoroutine(FadeinRope(3));
 
         attached = true;
         yield return null;
@@ -106,7 +110,8 @@ public class FakeMagnetHook : MonoBehaviour
     public IEnumerator AttachHookAsChildAfter(Transform _target)
     {
         //print("Hook to " + _target + " "+ _target.position);
-        rope.GetComponent<MeshRenderer>().enabled = true;
+        //rope.GetComponent<MeshRenderer>().enabled = true;
+        StartCoroutine(FadeinRope(3));
         //rope.gameObject.SetActive(true);
         float dist = (_target.position - targetHandle.transform.position).magnitude;
         while (dist > 0.01f)
@@ -139,9 +144,45 @@ public class FakeMagnetHook : MonoBehaviour
     public void DetachHook()
     {
         SetToHidePos();
-        rope.GetComponent<MeshRenderer>().enabled = false;
+        //rope.GetComponent<MeshRenderer>().enabled = false;
+        StartCoroutine(FadeoutRope(3));
         //rope.gameObject.SetActive(false);
         attached = false;
+    }
+
+    private IEnumerator FadeoutRope(float _duration)
+    {
+        _duration = 5;
+        float refVal = 2f;
+        float startTime = Time.time;
+        rope.GetComponent<MeshRenderer>().enabled = true;
+        Material mat = rope.GetComponent<MeshRenderer>().material;
+        mat.SetFloat("_AlphaClip", 1 * refVal);
+        while (Time.time < startTime + _duration)
+        {
+            float val = 1 - (Time.time - startTime) / _duration * refVal;
+            mat.SetFloat("_AlphaClip", val);
+            yield return null;
+        }
+        mat.SetFloat("_AlphaClip", 0);
+        rope.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    private IEnumerator FadeinRope(float _duration)
+    {
+        _duration = 5;
+        float refVal = 2f;
+        float startTime = Time.time;
+        rope.GetComponent<MeshRenderer>().enabled = true;
+        Material mat = rope.GetComponent<MeshRenderer>().material;
+        mat.SetFloat("_AlphaClip", 0);
+        while (Time.time < startTime + _duration)
+        {
+            float val = (Time.time - startTime) / _duration * refVal;
+            mat.SetFloat("_AlphaClip", val);
+            yield return null;
+        }
+        mat.SetFloat("_AlphaClip", 1 * refVal);
     }
 
     private void SetToHidePos()

@@ -75,6 +75,8 @@ public class Trigger : MonoBehaviour,
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("player") == false)
+            return;
         ToTrigger();
         //print(this.transform.parent.name + " Collide with " + other.name);
     }
