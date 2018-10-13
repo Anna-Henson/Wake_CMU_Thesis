@@ -25,6 +25,15 @@ public class TriggerMgr : MonoBehaviour
     public FakeMagnetHook hook;
     public Transform anotherTracker;
     public Transform dancer;
+    [Header("Light Controls")]
+    public Light lightToTurnOn;
+
+    [Header("Particles")]
+    public ParticleSystem ParticleOnWaypoint1;
+    public ParticleSystem ParticleOnWaypoint2;
+    public ParticleSystem ParticleOnWayPoint3;
+    public ParticleSystem ParticleOnWayPoint4;
+    public WaypointEmitter subParticle;
 
     // current playing audio
     private AudioSource audio;
@@ -60,6 +69,7 @@ public class TriggerMgr : MonoBehaviour
                 mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
             }));
+             mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWaypoint1));
         },
         (mgr, trigger)=>{
             print("1");
@@ -70,6 +80,11 @@ public class TriggerMgr : MonoBehaviour
                 mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
             }));
+
+            mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWaypoint1));
+            mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWaypoint2));
+
+
         },
         (mgr, trigger)=>{
             print("2");
@@ -80,11 +95,15 @@ public class TriggerMgr : MonoBehaviour
                 mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
             }));
+
+             mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWaypoint2));
+             mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWayPoint3));
         },
         (mgr, trigger)=>{
             print("3");
 
             mgr.StartCoroutine(mgr.FadeOut(5f));
+            mgr.StartCoroutine(mgr.LightOn(5f));
 
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
@@ -92,6 +111,9 @@ public class TriggerMgr : MonoBehaviour
                 mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
             }));
+
+            mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWayPoint3));
+            mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWayPoint4));
         },
         (mgr, trigger)=>{
             print("4");
@@ -105,6 +127,9 @@ public class TriggerMgr : MonoBehaviour
                 // Here we enter Stage3, we connect the player and dancer
                 mgr.ConnectToDancer();
             }));
+
+            mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWayPoint4));
+
         },
         (mgr, trigger)=>{
             print("5");
@@ -150,6 +175,31 @@ public class TriggerMgr : MonoBehaviour
             yield return null;
         }
     }
+    //Lights up the first spot light closest to the end when the camera turned on.
+    private IEnumerator LightOn(float _duration)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + _duration)
+        {
+            Debug.Log("In Light ON");
+            lightToTurnOn.intensity = 4.0f * (Time.time - startTime) / _duration;
+            yield return null;
+        }
+    }
+
+    private IEnumerator ParticleOn(ParticleSystem particle)
+    {
+        var emission = particle.emission;
+        emission.enabled = true;
+        yield return null;
+    }
+
+    private IEnumerator EmitParticle(ParticleSystem particle)
+    {
+
+        particle.GetComponent<ConnectLight>().ShootParicle();
+        yield return null;
+    }
 
     private IEnumerator ReachWaypointAndPlayAudio(Trigger _trigger, Action _callback)
     {
@@ -169,9 +219,9 @@ public class TriggerMgr : MonoBehaviour
                 yield return null;
             }
 
-            // For quick debug only
-            //yield return new WaitForSeconds(3);
-            //audio.Stop();
+             //For quick debug only
+            yield return new WaitForSeconds(3);
+            audio.Stop();
 
             _callback();
         }
@@ -222,6 +272,19 @@ public class TriggerMgr : MonoBehaviour
             if (i > 0)
                 triggers[i].dependencies.Add(triggers[i - 1]);
 
+        }
+
+        List<ParticleSystem> particles = new List<ParticleSystem>
+        {
+            ParticleOnWaypoint1,
+            ParticleOnWaypoint2,
+            ParticleOnWayPoint3,
+            ParticleOnWayPoint4
+        };
+        for (int i = 0; i < particles.Count; i++)
+        {
+            var emission = particles[i].emission;
+            emission.enabled = false;
         }
     }
 
