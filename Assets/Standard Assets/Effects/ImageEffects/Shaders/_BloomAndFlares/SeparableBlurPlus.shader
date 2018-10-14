@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Hidden/SeparableBlurPlus" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "" {}

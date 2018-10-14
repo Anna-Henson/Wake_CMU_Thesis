@@ -1,0 +1,248 @@
+fileFormatVersion: 2
+guid: f57e860f9484f442e83462702f2a1e7a
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: bigDoor
+    100002: bigdoor
+    100004: bigFrame
+    100006: ceiling
+    100008: doorBasement
+    100010: floor
+    100012: Point1
+    100014: polySurface130
+    100016: polySurface131
+    100018: polySurface132
+    100020: polySurface133
+    100022: polySurface134
+    100024: polySurface135
+    100026: polySurface136
+    100028: polySurface137
+    100030: polySurface138
+    100032: polySurface139
+    100034: polySurface145
+    100036: //RootNode
+    100038: transform1
+    100040: transform2
+    100042: transform22
+    100044: transform3
+    100046: truss
+    400000: bigDoor
+    400002: bigdoor
+    400004: bigFrame
+    400006: ceiling
+    400008: doorBasement
+    400010: floor
+    400012: Point1
+    400014: polySurface130
+    400016: polySurface131
+    400018: polySurface132
+    400020: polySurface133
+    400022: polySurface134
+    400024: polySurface135
+    400026: polySurface136
+    400028: polySurface137
+    400030: polySurface138
+    400032: polySurface139
+    400034: polySurface145
+    400036: //RootNode
+    400038: transform1
+    400040: transform2
+    400042: transform22
+    400044: transform3
+    400046: truss
+    2300000: bigDoor
+    2300002: bigFrame
+    2300004: ceiling
+    2300006: doorBasement
+    2300008: floor
+    2300010: polySurface130
+    2300012: polySurface131
+    2300014: polySurface132
+    2300016: polySurface133
+    2300018: polySurface134
+    2300020: polySurface135
+    2300022: polySurface136
+    2300024: polySurface137
+    2300026: polySurface138
+    2300028: polySurface139
+    2300030: polySurface145
+    2300032: transform2
+    2300034: transform3
+    2300036: truss
+    3300000: bigDoor
+    3300002: bigFrame
+    3300004: ceiling
+    3300006: doorBasement
+    3300008: floor
+    3300010: polySurface130
+    3300012: polySurface131
+    3300014: polySurface132
+    3300016: polySurface133
+    3300018: polySurface134
+    3300020: polySurface135
+    3300022: polySurface136
+    3300024: polySurface137
+    3300026: polySurface138
+    3300028: polySurface139
+    3300030: polySurface145
+    3300032: transform2
+    3300034: transform3
+    3300036: truss
+    4300000: floor
+    4300002: ceiling
+    4300004: doorBasement
+    4300006: transform2
+    4300008: transform3
+    4300010: bigFrame
+    4300012: polySurface130
+    4300014: polySurface131
+    4300016: polySurface132
+    4300018: polySurface133
+    4300020: polySurface134
+    4300022: polySurface135
+    4300024: polySurface136
+    4300026: polySurface137
+    4300028: polySurface138
+    4300030: polySurface139
+    4300032: polySurface145
+    4300034: bigDoor
+    4300036: truss
+    9500000: //RootNode
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Default_Material
+    second: {fileID: 2100000, guid: 25e273dea19d44e05944cfc0d734b4bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Black_
+    second: {fileID: 2100000, guid: 2791268f9ea604cbf87420e89ede0342, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _DarkGray_
+    second: {fileID: 2100000, guid: fea1a4747d5174f4399f1d1ad5419dcd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _DimGray_
+    second: {fileID: 2100000, guid: e5a9facf0482542d39e44de27c12ca5f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _LightGray_1
+    second: {fileID: 2100000, guid: b4e415e4e798040b9b1a88b0e9b0e383, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: _Silver_
+    second: {fileID: 2100000, guid: 89dd5538a239746a1b457680acb448c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door.keyhole1
+    second: {fileID: 2100000, guid: 097b782148c5a47e5bb459a11fbfdc24, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door1
+    second: {fileID: 2100000, guid: 47687101352a941b19aab9b37052b71b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: 32dfae6a05746408e9c2db9527d0249e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal1
+    second: {fileID: 2100000, guid: b47dc3391b860417ab14f8d33ba90dd5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: truss_RT
+    second: {fileID: 2100000, guid: 0eeabc08f3822424292897b6bfdad7d3, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

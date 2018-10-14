@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Hidden/ContrastComposite" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "" {}
@@ -48,6 +50,7 @@ Shader "Hidden/ContrastComposite" {
 		
 		half4 enhancement = saturate (abs(difference) - threshold) * signs * 1.0/(1.0-threshold);
 		color += enhancement * intensity;
+		
 		return color;
 	}
 

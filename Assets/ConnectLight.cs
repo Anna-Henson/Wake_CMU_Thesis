@@ -6,9 +6,9 @@ public class ConnectLight : MonoBehaviour {
     [Header("path1")]
     public GameObject light1;
     public GameObject particle1;
-    [Header("path2")]
-    public GameObject light2;
-    public GameObject particle2;
+    //[Header("path2")]
+    //public GameObject light2;
+    //public GameObject particle2;
 
     public void ShootParicle()
     {
@@ -24,12 +24,12 @@ public class ConnectLight : MonoBehaviour {
         particle1.GetComponent<WaypointEmitter>().setDestination(light1);
         particle1.GetComponent<WaypointEmitter>().enabled = true;
 
-        yield return new WaitForSeconds(1);
-        var emission2 = particle2.GetComponent<ParticleSystem>().emission;
-        emission2.enabled = true;
-        particle2.GetComponentInChildren<Light>().enabled = true;
-        particle2.GetComponent<WaypointEmitter>().setDestination(light2);
-        particle2.GetComponent<WaypointEmitter>().enabled = true;
+        yield return null;
+        //var emission2 = particle2.GetComponent<ParticleSystem>().emission;
+        //emission2.enabled = true;
+        //particle2.GetComponentInChildren<Light>().enabled = true;
+        //particle2.GetComponent<WaypointEmitter>().setDestination(light2);
+        //particle2.GetComponent<WaypointEmitter>().enabled = true;
     }
 
 }

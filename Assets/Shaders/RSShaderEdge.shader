@@ -84,7 +84,7 @@ Shader "Custom/RSShaderEdge"
 					o.getRidOfThisPoint = float4(0, 0, 0, 0);
 
 					//Do Not Touch This Number(Change would cause fish eye effect)
-					float rs_planeZDist = 3.5;
+					float rs_planeZDist = 3;
 
 					float3 projectionVec = normalize(v.vertex.xyz - float3(0, rs_planeZDist, 0));
 					

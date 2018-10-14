@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 
 // This Ambient Occlusion image effect is based on "Scalable Ambient Obscurance":
 

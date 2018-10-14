@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Hidden/BlurEffectConeTap" {
 	Properties { _MainTex ("", any) = "" {} }
 	CGINCLUDE
