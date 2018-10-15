@@ -27,6 +27,7 @@ public class TriggerMgr : MonoBehaviour
     public Transform dancer;
     [Header("Light Controls")]
     public Light lightToTurnOn;
+    public Light startLight;
 
     [Header("Particles")]
     public ParticleSystem ParticleOnWaypoint1;
@@ -157,12 +158,6 @@ public class TriggerMgr : MonoBehaviour
             print("8");
 
             mgr.RS_PlaneRenderer.material.shader = mgr.RS_Shader_OnTop;
-            //mgr.StartCoroutine(mgr.PlayAudio(trigger, () =>
-            //{
-            //    print("Complete 8");
-            //    mgr.SetAnchorToNext(trigger);
-            //    trigger.TriggeredCallback();
-            //}));
         },
     };
 
@@ -220,8 +215,8 @@ public class TriggerMgr : MonoBehaviour
             }
 
              //For quick debug only
-            yield return new WaitForSeconds(3);
-            audio.Stop();
+            //yield return new WaitForSeconds(3);
+            //audio.Stop();
 
             _callback();
         }
@@ -252,6 +247,28 @@ public class TriggerMgr : MonoBehaviour
     private void ConnectToDancer()
     {
         hook.StartCoroutine(hook.AttachHookAsChildAfter(dancer));
+    }
+
+    private void PlayStartAudio()
+    {
+        var startAudio = startLight.GetComponent<AudioSource>();
+        if (startAudio != null)
+        {
+            startAudio.Play();
+            float audioLength = startAudio.clip.length;
+            StartCoroutine(StartLightOn(audioLength));
+        }
+    }
+
+    private IEnumerator StartLightOn(float audioLength)
+    {
+        yield return new WaitForSeconds(audioLength);
+        float startTime = Time.time;
+        while(startLight.intensity < 2.17f)
+        {
+            startLight.intensity = 2.17f * (Time.time - startTime) / 5f;
+            yield return null;
+        }
     }
 
     private void Start()
@@ -302,6 +319,19 @@ public class TriggerMgr : MonoBehaviour
                 if (i > 0)
                     SetAnchorToNext(triggers[i - 1]);
                 triggers[i].ForceTrigger();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Space Pressed");
+            var startAudio = startLight.GetComponent<AudioSource>();
+            if (startAudio != null)
+            {
+                PlayStartAudio();
+            } else
+            {
+                Debug.Log("Did not find start audio on start light.");
             }
         }
     }
