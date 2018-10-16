@@ -6,8 +6,10 @@ public class PathRecord : MonoBehaviour {
 
     public GameObject trackerPlayer;
     public LineRenderer pathRenderer;
+    public GameObject renderPlane;
 
     //Dancer's Trackers
+    [Header("Dancer's Trackers")]
     public GameObject tracker1;
     public GameObject tracker2;
 
@@ -31,10 +33,37 @@ public class PathRecord : MonoBehaviour {
         Debug.Log(renderedPath.Count);
         yield return null;
     }
+
+    [ContextMenu("Reset Mesh")]
+    private void SetTextureLocation()
+    {
+        
+        Mesh mesh = renderPlane.GetComponent<MeshFilter>().mesh;
+        Vector2 tracker1Pos = new Vector2(tracker1.transform.position.x, tracker1.transform.position.z);
+        Vector2 tracker2Pos = new Vector2(tracker2.transform.position.x, tracker2.transform.position.z);
+        float distance = Vector2.Distance(tracker1Pos, tracker2Pos);
+        Vector3 newCenter = (tracker1.transform.position + tracker2.transform.position) / 2;
+        
+        Vector2 bound1 = new Vector2(mesh.bounds.min.x, mesh.bounds.min.z);
+        Vector2 bound2 = new Vector2(mesh.bounds.max.x, mesh.bounds.max.z);
+        Debug.Log("Bound1 : " + bound1 + "Bound2:" + bound2);
+        float meshDist = Vector2.Distance(bound1, bound2);
+        Debug.Log("MeshDist:" + meshDist);
+        float ratio = distance / meshDist;
+
+        Vector3 center = mesh.bounds.center;
+        Vector3[] vertices = mesh.vertices;
+        Vector3[] normals = mesh.normals;
+        renderPlane.transform.position = newCenter;
+        renderPlane.transform.localScale *= 2 * ratio;
+        renderPlane.GetComponent<MeshRenderer>().enabled = true;
+    }
+
     private void Start()
     {
         isTracking = true;
         startTime = Time.time;
+        renderPlane.GetComponent<MeshRenderer>().enabled = false;
     }
 
     void Update () {
@@ -48,6 +77,7 @@ public class PathRecord : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             isTracking = false;
+            SetTextureLocation();
             StartCoroutine(DrawPath(path));
         }
 	}
