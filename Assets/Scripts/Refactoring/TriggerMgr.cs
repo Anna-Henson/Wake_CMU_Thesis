@@ -34,7 +34,6 @@ public class TriggerMgr : MonoBehaviour
     public ParticleSystem ParticleOnWaypoint2;
     public ParticleSystem ParticleOnWayPoint3;
     public ParticleSystem ParticleOnWayPoint4;
-    public WaypointEmitter subParticle;
 
     // current playing audio
     private AudioSource audio;
@@ -103,7 +102,7 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("3");
 
-            mgr.StartCoroutine(mgr.FadeOut(5f));
+            mgr.StartCoroutine(mgr.FadeIn(5f));
             mgr.StartCoroutine(mgr.LightOn(5f));
 
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
@@ -161,12 +160,22 @@ public class TriggerMgr : MonoBehaviour
         },
     };
 
-    private IEnumerator FadeOut(float _duration)
+    private IEnumerator FadeIn(float _duration)
     {
         float startTime = Time.time;
         while (Time.time < startTime + _duration)
         {
             RS_PlaneRenderer.material.SetFloat("_FadeOut", (Time.time - startTime) / _duration);
+            yield return null;
+        }
+    }
+
+    private IEnumerator FadeOut(float _duration)
+    {
+        float startTime = Time.time;
+        while(Time.time < startTime + _duration)
+        {
+            RS_PlaneRenderer.material.SetFloat("_FadeOut", 1.0f - (Time.time - startTime) / _duration);
             yield return null;
         }
     }
@@ -177,7 +186,7 @@ public class TriggerMgr : MonoBehaviour
         while (Time.time < startTime + _duration)
         {
             Debug.Log("In Light ON");
-            lightToTurnOn.intensity = 4.0f * (Time.time - startTime) / _duration;
+            lightToTurnOn.intensity = 2.7f * (Time.time - startTime) / _duration;
             yield return null;
         }
     }
@@ -267,6 +276,7 @@ public class TriggerMgr : MonoBehaviour
         while(startLight.intensity < 2.17f)
         {
             startLight.intensity = 2.17f * (Time.time - startTime) / 5f;
+            startLight.gameObject.GetComponent<HxVolumetricLight>().Intensity = 2.17f * (Time.time - startTime) / 5f;
             yield return null;
         }
     }
@@ -321,7 +331,8 @@ public class TriggerMgr : MonoBehaviour
                 triggers[i].ForceTrigger();
             }
         }
-
+        
+        //Start the Experience
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Space Pressed");
@@ -333,6 +344,12 @@ public class TriggerMgr : MonoBehaviour
             {
                 Debug.Log("Did not find start audio on start light.");
             }
+        }
+
+        //End the experience
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            StartCoroutine(FadeOut(5f));
         }
     }
 }

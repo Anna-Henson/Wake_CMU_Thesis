@@ -75,6 +75,7 @@ public class Trigger : MonoBehaviour,
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.gameObject.tag);
         if (other.CompareTag("player") == false)
             return;
         ToTrigger();

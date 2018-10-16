@@ -97,6 +97,7 @@ public class FakeMagnetHook : MonoBehaviour
 
     public IEnumerator AttachHookAsChild(Transform _target)
     {
+        Debug.Log("In AttachHookAsChild");
         targetHandle.transform.parent = _target;
         targetHandle.transform.localPosition = Vector3.zero;
 
@@ -152,6 +153,7 @@ public class FakeMagnetHook : MonoBehaviour
 
     private IEnumerator FadeoutRope(float _duration)
     {
+        Debug.Log("FadeOut Rope");
         _duration = 5;
         float refVal = 2f;
         float startTime = Time.time;
