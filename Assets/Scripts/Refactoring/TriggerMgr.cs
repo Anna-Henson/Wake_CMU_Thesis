@@ -102,7 +102,7 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("3");
 
-            mgr.StartCoroutine(mgr.FadeIn(5f));
+            mgr.StartCoroutine(mgr.FadeIn(10f));
             mgr.StartCoroutine(mgr.LightOn(5f));
 
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>

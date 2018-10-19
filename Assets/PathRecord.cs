@@ -56,6 +56,8 @@ public class PathRecord : MonoBehaviour {
         Vector3[] normals = mesh.normals;
         renderPlane.transform.position = newCenter;
         renderPlane.transform.localScale *= 2 * ratio;
+        renderPlane.transform.right = tracker2.transform.position - tracker1.transform.position;
+        renderPlane.transform.Rotate(new Vector3(0, 0, 45));
         renderPlane.GetComponent<MeshRenderer>().enabled = true;
     }
 

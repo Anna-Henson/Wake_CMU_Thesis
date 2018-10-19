@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: WeaponMesh_MeshEffect
   m_Shader: {fileID: 4800000, guid: 972a05a1fafc1c54d8287892f2a939b6, type: 3}
-  m_ShaderKeywords: USE_ALPHA_CLIPING USE_CUTOUT USE_FRESNEL USE_HEIGHT USE_REFRACTIVE
+  m_ShaderKeywords: USE_CUTOUT USE_FRESNEL USE_HEIGHT USE_REFRACTIVE
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -97,7 +97,7 @@ Material:
     - _SrcBlend: 1
     - _Strength: 1
     - _UVSec: 0
-    - _UseAlphaCliping: 1
+    - _UseAlphaCliping: 0
     - _UseBlending: 0
     - _UseCutout: 1
     - _UseFresnel: 1

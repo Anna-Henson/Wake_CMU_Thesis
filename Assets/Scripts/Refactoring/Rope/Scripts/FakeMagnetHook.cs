@@ -42,7 +42,7 @@ public class FakeMagnetHook : MonoBehaviour
     {
         //print("Hook to " + _target + " "+ _target.position);
         //rope.GetComponent<MeshRenderer>().enabled = true;
-        StartCoroutine(FadeinRope(3));
+        //StartCoroutine(FadeinRope(3));
 
         targetHandle.transform.position = _target.position;
 
@@ -77,7 +77,7 @@ public class FakeMagnetHook : MonoBehaviour
     {
         //print("Hook to " + _target + " "+ _target.position);
         //rope.GetComponent<MeshRenderer>().enabled = true;
-        StartCoroutine(FadeinRope(3));
+        //StartCoroutine(FadeinRope(3));
         //rope.gameObject.SetActive(true);
         float dist = (_targetPos - targetHandle.transform.position).magnitude;
         while (dist > 0.01f)
@@ -102,7 +102,7 @@ public class FakeMagnetHook : MonoBehaviour
         targetHandle.transform.localPosition = Vector3.zero;
 
         //rope.GetComponent<MeshRenderer>().enabled = true;
-        StartCoroutine(FadeinRope(3));
+        //StartCoroutine(FadeinRope(3));
 
         attached = true;
         yield return null;
@@ -146,7 +146,7 @@ public class FakeMagnetHook : MonoBehaviour
     {
         SetToHidePos();
         //rope.GetComponent<MeshRenderer>().enabled = false;
-        StartCoroutine(FadeoutRope(3));
+        //StartCoroutine(FadeoutRope(3));
         //rope.gameObject.SetActive(false);
         attached = false;
     }
