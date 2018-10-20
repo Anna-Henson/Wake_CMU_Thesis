@@ -9,6 +9,7 @@ Shader "Custom/RSShaderEdge"
 		_WindowSize ("Window size", float) = 2.5
 		_BackgroundSub("Background Point", float) = 0.5
 		_DepthScale("Depth Scale", float) = 1000
+		_CameraOffsetDist("Camera Offset Distance", float) = 4.0
 		_Clip("toggle window mask 1 for on 0 for off", float) = 1
 		_ScanRange("Range of Visible Depth", float) = 0.005
 		//Edge Detection Code with Roberts Operators
@@ -16,6 +17,7 @@ Shader "Custom/RSShaderEdge"
 		_SampleDistance("Sample Distance", float) = 1.0 //How far away should the samples be apart from each other
 		_Sensitivity("Sensitivity", float) = 1.0 //Sensitivity to depth change
 		_FadeOut("Fade Out Slider", range(0, 1)) = 0
+		
 		
 	}
 
@@ -62,6 +64,7 @@ Shader "Custom/RSShaderEdge"
 				float _WindowSize;
 				float _BackgroundSub;
 				float _DepthScale;
+				float _CameraOffsetDist;
 				float _Clip;
 				float _ScanRange;
 
@@ -84,7 +87,7 @@ Shader "Custom/RSShaderEdge"
 					o.getRidOfThisPoint = float4(0, 0, 0, 0);
 
 					//Do Not Touch This Number(Change would cause fish eye effect)
-					float rs_planeZDist = 3;
+					float rs_planeZDist = _CameraOffsetDist;;
 
 					float3 projectionVec = normalize(v.vertex.xyz - float3(0, rs_planeZDist, 0));
 					
@@ -284,6 +287,7 @@ Shader "Custom/RSShaderEdge"
 			float _WindowSize;
 			float _BackgroundSub;
 			float _DepthScale;
+			float _CameraOffsetDist;
 			float _Clip;
 			float _ScanRange;
 
@@ -307,7 +311,7 @@ Shader "Custom/RSShaderEdge"
 				o.getRidOfThisPoint = float4(0,0,0,0);
 
 				//Do Not Touch This Number(Change would cause fish eye effect)
-				float rs_planeZDist = 3.5;
+				float rs_planeZDist = _CameraOffsetDist;
 
 				float3 projectionVec = normalize(v.vertex.xyz - float3(0,rs_planeZDist,0));
 				if (d == 0) {
@@ -315,50 +319,50 @@ Shader "Custom/RSShaderEdge"
 					tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
 					d = tex.r;
 				}
-				//if (d == 0){
-				//	o.getRidOfThisPoint.x = 1;
-				//	tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
-				//	d = tex.r;
-				//	if (d == 0){
-				//	
-				//		float xOffset = 0;
-				//		float yOffset = 0;
-				//		float2 dirVector = normalize(float2(0.5- v.texcoord.x, 0.5 - v.texcoord.y));
-				//		for(int i = 1 ; i < 11; i ++){
-				//		
-				//			xOffset = dirVector.x * (i/30.);
-				//			yOffset = dirVector.y * (i/30.);
-				//			d = ((tex2Dlod(_DepthTex, float4(v.texcoord.x + xOffset, v.texcoord.y + yOffset, 0, 0))).r);
-				//			if (d != 0 && d < _BackgroundSub){
-				//				break;
-				//			}
-				//		}
-				//		float dd = 0;
-				//		for(int j = 1 ; j < 11; j ++){
-				//			xOffset = dirVector.x * (j/30.);
-				//			yOffset = dirVector.y * (j/30.);
-				//			dd = ((tex2Dlod(_DepthTex, float4(v.texcoord.x - xOffset, v.texcoord.y - yOffset, 0, 0))).r);
-				//			if (dd != 0 && dd < _BackgroundSub){
-				//				break;
-				//			}
-				//		}
+				if (d == 0){
+					o.getRidOfThisPoint.x = 1;
+					tex = tex2Dlod(_PrevDepthTex, float4(v.texcoord.xy, 0, 0));
+					d = tex.r;
+					if (d == 0){
+					
+						float xOffset = 0;
+						float yOffset = 0;
+						float2 dirVector = normalize(float2(0.5- v.texcoord.x, 0.5 - v.texcoord.y));
+						for(int i = 1 ; i < 11; i ++){
+						
+							xOffset = dirVector.x * (i/30.);
+							yOffset = dirVector.y * (i/30.);
+							d = ((tex2Dlod(_DepthTex, float4(v.texcoord.x + xOffset, v.texcoord.y + yOffset, 0, 0))).r);
+							if (d != 0 && d < _BackgroundSub){
+								break;
+							}
+						}
+						float dd = 0;
+						for(int j = 1 ; j < 11; j ++){
+							xOffset = dirVector.x * (j/30.);
+							yOffset = dirVector.y * (j/30.);
+							dd = ((tex2Dlod(_DepthTex, float4(v.texcoord.x - xOffset, v.texcoord.y - yOffset, 0, 0))).r);
+							if (dd != 0 && dd < _BackgroundSub){
+								break;
+							}
+						}
 
-				//		if(dd != 0){
-				//			if (d != 0){
-				//				d = min(d,dd);
-				//			}
-				//			else{ // d == 0;
-				//				d = dd;
-				//			}
-				//		}
-				//		if (d == 0){
-				//			d = 1;
-				//		}		
-				//	}
+						if(dd != 0){
+							if (d != 0){
+								d = min(d,dd);
+							}
+							else{ // d == 0;
+								d = dd;
+							}
+						}
+						if (d == 0){
+							d = 1;
+						}		
+					}
 
 					
 
-				//}
+				}
 
 				d *= _DepthScale;
 				v.vertex.xyz = v.vertex.xyz + d * projectionVec;
@@ -513,6 +517,7 @@ Shader "Custom/RSShaderEdge"
 			float _WindowSize;
 			float _BackgroundSub;
 			float _DepthScale;
+			float _CameraOffsetDist;
 			float _Clip;
 			float _ScanRange;
 
@@ -536,7 +541,7 @@ Shader "Custom/RSShaderEdge"
 				o.getRidOfThisPoint = float4(0, 0, 0, 0);
 
 				//Do Not Touch This Number(Change would cause fish eye effect)
-				float rs_planeZDist = 3.5;
+				float rs_planeZDist = _CameraOffsetDist;
 
 				float3 projectionVec = normalize(v.vertex.xyz - float3(0, rs_planeZDist, 0));
 

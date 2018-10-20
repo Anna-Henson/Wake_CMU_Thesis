@@ -178,6 +178,7 @@ public class TriggerMgr : MonoBehaviour
             RS_PlaneRenderer.material.SetFloat("_FadeOut", 1.0f - (Time.time - startTime) / _duration);
             yield return null;
         }
+        RS_PlaneRenderer.material.SetFloat("_FadeOut", 0.0f);
     }
     //Lights up the first spot light closest to the end when the camera turned on.
     private IEnumerator LightOn(float _duration)
@@ -193,8 +194,8 @@ public class TriggerMgr : MonoBehaviour
 
     private IEnumerator ParticleOn(ParticleSystem particle)
     {
-        var emission = particle.emission;
-        emission.enabled = true;
+        var sphere = particle.gameObject.GetComponentInChildren<MeshRenderer>();
+        sphere.enabled = true;
         yield return null;
     }
 
@@ -209,7 +210,7 @@ public class TriggerMgr : MonoBehaviour
     {
 
         // Once you reach the way point, you should hide the hook
-        hook.DetachHook();
+        //hook.DetachHook();
 
         // Start play audio and wait until end
         audio = _trigger.GetComponent<AudioSource>();
