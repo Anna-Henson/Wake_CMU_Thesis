@@ -27,6 +27,8 @@ public class TriggerMgr : MonoBehaviour
     public Transform dancer;
     [Header("Light Controls")]
     public Light lightToTurnOn;
+    public Light lightToTurnOn2;
+    public Light lightToTurnOn3;
     public Light startLight;
 
     [Header("Particles")]
@@ -34,6 +36,10 @@ public class TriggerMgr : MonoBehaviour
     public ParticleSystem ParticleOnWaypoint2;
     public ParticleSystem ParticleOnWayPoint3;
     public ParticleSystem ParticleOnWayPoint4;
+    public ParticleSystem dancerParticle;
+
+    [Header("IntroSequence")]
+    public IntroSequence IntroSequence;
 
     // current playing audio
     private AudioSource audio;
@@ -68,8 +74,12 @@ public class TriggerMgr : MonoBehaviour
                 mgr.hook.SetBackToOriginParent();
                 mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
+                mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWaypoint1));
+                mgr.IntroSequence.StartCoroutine(mgr.IntroSequence.RopeFadeIn(0.5f));
+                ParticleSystem.EmissionModule dancerEmission = mgr.dancerParticle.emission;
+                dancerEmission.enabled = true;
             }));
-             mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWaypoint1));
+           
         },
         (mgr, trigger)=>{
             print("1");
@@ -83,8 +93,6 @@ public class TriggerMgr : MonoBehaviour
 
             mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWaypoint1));
             mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWaypoint2));
-
-
         },
         (mgr, trigger)=>{
             print("2");
@@ -102,8 +110,10 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("3");
 
-            mgr.StartCoroutine(mgr.FadeIn(10f));
-            mgr.StartCoroutine(mgr.LightOn(5f));
+            mgr.StartCoroutine(mgr.FadeIn(10f, 10f));
+            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn));
+            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn2));
+            mgr.StartCoroutine(mgr.LightOn(5f, 0f, mgr.lightToTurnOn3));
 
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
@@ -160,15 +170,20 @@ public class TriggerMgr : MonoBehaviour
         },
     };
 
-    private IEnumerator FadeIn(float _duration)
+    private IEnumerator FadeIn(float _duration, float _wait = 0f)
     {
+        if ( _wait > 0f)
+        {
+            yield return new WaitForSeconds(_wait);
+        }
         float startTime = Time.time;
         while (Time.time < startTime + _duration)
         {
-            RS_PlaneRenderer.material.SetFloat("_FadeOut", (Time.time - startTime) / _duration);
+            RS_PlaneRenderer.material.SetFloat("_FadeOut", ((Time.time - startTime) / _duration));
             yield return null;
         }
     }
+
 
     private IEnumerator FadeOut(float _duration)
     {
@@ -181,13 +196,14 @@ public class TriggerMgr : MonoBehaviour
         RS_PlaneRenderer.material.SetFloat("_FadeOut", 0.0f);
     }
     //Lights up the first spot light closest to the end when the camera turned on.
-    private IEnumerator LightOn(float _duration)
+    private IEnumerator LightOn(float _duration, float _wait, Light light)
     {
+        yield return new WaitForSeconds(_wait);
         float startTime = Time.time;
         while (Time.time < startTime + _duration)
         {
             Debug.Log("In Light ON");
-            lightToTurnOn.intensity = 2.7f * (Time.time - startTime) / _duration;
+            light.intensity = 1.5f * (Time.time - startTime) / _duration;
             yield return null;
         }
     }

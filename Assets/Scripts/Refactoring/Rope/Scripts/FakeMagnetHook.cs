@@ -8,10 +8,12 @@ public class FakeMagnetHook : MonoBehaviour
     public ObiRope rope;
     public ObiParticleHandle targetHandle;
     public bool attached = false;
+    public AudioSource audio;
 
     // Use this for initialization
     private void Awake()
     {
+        
         DetachHook();
     }
 
@@ -53,7 +55,8 @@ public class FakeMagnetHook : MonoBehaviour
     {
         //print("Hook to " + _target + " "+ _target.position);
         //rope.GetComponent<MeshRenderer>().enabled = true;
-        StartCoroutine(FadeinRope(3));
+        audio.Play();
+        //StartCoroutine(FadeinRope(3));
         //rope.gameObject.SetActive(true);
         float dist = (_target.position - targetHandle.transform.position).magnitude;
         while (dist > 0.01f)
@@ -79,6 +82,7 @@ public class FakeMagnetHook : MonoBehaviour
         //rope.GetComponent<MeshRenderer>().enabled = true;
         //StartCoroutine(FadeinRope(3));
         //rope.gameObject.SetActive(true);
+        audio.Play();
         float dist = (_targetPos - targetHandle.transform.position).magnitude;
         while (dist > 0.01f)
         {
@@ -97,6 +101,7 @@ public class FakeMagnetHook : MonoBehaviour
 
     public IEnumerator AttachHookAsChild(Transform _target)
     {
+        audio.Play();
         Debug.Log("In AttachHookAsChild");
         targetHandle.transform.parent = _target;
         targetHandle.transform.localPosition = Vector3.zero;

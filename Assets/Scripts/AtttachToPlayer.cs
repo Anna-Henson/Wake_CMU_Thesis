@@ -9,7 +9,7 @@ public class AtttachToPlayer : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+       
     }
 
     // Update is called once per frame
@@ -17,6 +17,7 @@ public class AtttachToPlayer : MonoBehaviour
     {
         if(player != null)
         {
+            
             transform.position = player.position;
         }
     }

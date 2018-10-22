@@ -33,7 +33,7 @@ public class WaypointEmitter: MonoBehaviour
         {
             Debug.Log("Lighting up");
             Debug.Log(destination.GetComponent<Light>());
-            destination.GetComponent<Light>().intensity = Mathf.Min(2.7f, intensity += 0.2f);
+            destination.GetComponent<Light>().intensity = Mathf.Min(1.0f, intensity += 0.1f);
         }
           
     }

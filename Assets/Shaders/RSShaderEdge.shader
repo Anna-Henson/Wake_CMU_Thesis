@@ -156,7 +156,7 @@ Shader "Custom/RSShaderEdge"
 					v.vertex.x = v.vertex.x * clamp((pow(2.5,-(o.parameters.y / 5)) + 1), 1, 1.5);
 					v.vertex.y = v.vertex.y * clamp((pow(2.5, -(o.parameters.y / 5)) + 1), 1, 1.5) + center.y;
 					float4 worldPos2 = mul(unity_ObjectToWorld, v.vertex);
-					worldPos.y = 0;
+					worldPos.y = 0.5;
 					o.modelPos.xyz = worldPos;
 					o.getRidOfThisPoint.yzw = o.modelPos.xyz;
 				

@@ -4,7 +4,7 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: particle trail additive intensify
   m_Shader: {fileID: 4800000, guid: 84273470abd10cc4d849f68d11b1c613, type: 3}
@@ -62,7 +62,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Glow: 2
+    - _Glow: 1.2
+    - _InvFade: 2.3
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

@@ -6,9 +6,9 @@ public class ConnectLight : MonoBehaviour {
     [Header("path1")]
     public GameObject light1;
     public GameObject particle1;
-    //[Header("path2")]
-    //public GameObject light2;
-    //public GameObject particle2;
+
+    [Header("Audio")]
+    public AudioSource audio;
 
     public void ShootParicle()
     {
@@ -33,7 +33,13 @@ public class ConnectLight : MonoBehaviour {
 
         particle1.GetComponent<WaypointEmitter>().setDestination(light1);
         particle1.GetComponent<WaypointEmitter>().enabled = true;
+        audio.Play();
         yield return null;
+    }
+
+    private void Start()
+    {
+        light1.GetComponent<Light>().intensity = 0.0f;
     }
 
 }
