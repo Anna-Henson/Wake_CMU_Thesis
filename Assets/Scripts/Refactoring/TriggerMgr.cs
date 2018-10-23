@@ -29,6 +29,7 @@ public class TriggerMgr : MonoBehaviour
     public Light lightToTurnOn;
     public Light lightToTurnOn2;
     public Light lightToTurnOn3;
+    public Light lightOnPt3;
     public Light startLight;
 
     [Header("Particles")]
@@ -110,20 +111,24 @@ public class TriggerMgr : MonoBehaviour
         (mgr, trigger)=>{
             print("3");
 
-            mgr.StartCoroutine(mgr.FadeIn(10f, 10f));
-            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn));
-            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn2));
-            mgr.StartCoroutine(mgr.LightOn(5f, 0f, mgr.lightToTurnOn3));
+            mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWayPoint3));
 
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 3");
-                mgr.SetAnchorToNext(trigger);
+                //mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
+                mgr.ConnectToDancer();
+                
             }));
 
-            mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWayPoint3));
+            mgr.StartCoroutine(mgr.FadeIn(10f, 20f));
+            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn));
+            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn2));
+            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn3));
+            mgr.StartCoroutine(mgr.LightOn(5f, 30f, mgr.lightOnPt3));
             mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWayPoint4));
+
         },
         (mgr, trigger)=>{
             print("4");
@@ -135,39 +140,37 @@ public class TriggerMgr : MonoBehaviour
                 trigger.TriggeredCallback();
 
                 // Here we enter Stage3, we connect the player and dancer
-                mgr.ConnectToDancer();
+                //mgr.ConnectToDancer();
             }));
 
-            mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWayPoint4));
-
         },
-        (mgr, trigger)=>{
-            print("5");
+        //(mgr, trigger)=>{
+        //    print("5");
 
-            //mgr.SetAnchorToNext(trigger);
-            trigger.TriggeredCallback();
-        },
-        (mgr, trigger)=>{
-            print("6");
+        //    //mgr.SetAnchorToNext(trigger);
+        //    trigger.TriggeredCallback();
+        //},
+        //(mgr, trigger)=>{
+        //    print("6");
 
-            //mgr.SetAnchorToNext(trigger);
-            trigger.TriggeredCallback();
-        },
-        (mgr, trigger)=>{
-            print("7");
+        //    //mgr.SetAnchorToNext(trigger);
+        //    trigger.TriggeredCallback();
+        //},
+        //(mgr, trigger)=>{
+        //    print("7");
 
-            mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
-            {
-                print("Complete 7");
-                //mgr.SetAnchorToNext(trigger);
-                trigger.TriggeredCallback();
-            }));
-        },
-        (mgr, trigger)=>{
-            print("8");
+        //    mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
+        //    {
+        //        print("Complete 7");
+        //        //mgr.SetAnchorToNext(trigger);
+        //        trigger.TriggeredCallback();
+        //    }));
+        //},
+        //(mgr, trigger)=>{
+        //    print("8");
 
-            mgr.RS_PlaneRenderer.material.shader = mgr.RS_Shader_OnTop;
-        },
+        //    mgr.RS_PlaneRenderer.material.shader = mgr.RS_Shader_OnTop;
+        //},
     };
 
     private IEnumerator FadeIn(float _duration, float _wait = 0f)
@@ -208,11 +211,19 @@ public class TriggerMgr : MonoBehaviour
         }
     }
 
+
     private IEnumerator ParticleOn(ParticleSystem particle)
     {
         var sphere = particle.gameObject.GetComponentInChildren<MeshRenderer>();
         sphere.enabled = true;
-        yield return null;
+        float startTime = Time.time;
+        while (Time.time < startTime + 3f)
+        {
+            Debug.Log("In Sphere On");
+            float ratio = (Time.time - startTime) / 3f;
+            sphere.transform.localScale = new Vector3(ratio, ratio, ratio);
+            yield return null;
+        }
     }
 
     private IEnumerator EmitParticle(ParticleSystem particle)

@@ -8,6 +8,7 @@ TagManager:
   - tableLight
   - plane
   - player
+  - pathParticle
   layers:
   - Default
   - TransparentFX

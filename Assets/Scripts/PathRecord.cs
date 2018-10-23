@@ -27,7 +27,6 @@ public class PathRecord : MonoBehaviour {
             renderedPath.Add(point);
             pathRenderer.positionCount = renderedPath.Count;
             pathRenderer.SetPositions(renderedPath.ToArray());
-            Debug.Log(point);
         }
 
         Debug.Log(renderedPath.Count);
@@ -70,7 +69,7 @@ public class PathRecord : MonoBehaviour {
     }
 
     void Update () {
-		if (isTracking && Time.time - startTime > 0.05f)
+		if (isTracking && Time.time - startTime > 0.1f)
         {
             startTime = Time.time;
             path.Add(trackerPlayer.transform.position);
@@ -82,6 +81,12 @@ public class PathRecord : MonoBehaviour {
             isTracking = false;
             SetTextureLocation();
             StartCoroutine(DrawPath(path));
+            GameObject[] particles =  GameObject.FindGameObjectsWithTag("pathParticle");
+            Debug.Log(particles);
+            foreach(GameObject particle in particles)
+            {
+                particle.GetComponent<MeshRenderer>().enabled = false;
+            }
         }
 	}
 }
