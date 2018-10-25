@@ -83,7 +83,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BackgroundSub: 7.93
+    - _BackgroundSub: 6
     - _BumpScale: 1
     - _CameraOffsetDist: 4.39
     - _Clip: 1

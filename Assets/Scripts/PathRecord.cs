@@ -76,8 +76,23 @@ public class PathRecord : MonoBehaviour {
             yield return null;
         }
         light.intensity = 0.0f;
+        StartCoroutine(TurnPathOff());
     }
 
+    private IEnumerator TurnPathOff()
+    {
+        float duration = 10f;
+        float startTime = Time.time;
+        float startIntensity = pathRenderer.material.GetFloat("_InvFade");
+        Debug.Log("In Path Off");
+        while (Time.time < startTime + duration)
+        {
+            float fade = startIntensity - startIntensity * (Time.time - startTime) / duration;
+            pathRenderer.material.SetFloat("_InvFade", fade);
+            yield return null;
+        }
+        pathRenderer.material.SetFloat("_InvFade", 0.0f);
+    }
     private void Start()
     {
         isTracking = true;

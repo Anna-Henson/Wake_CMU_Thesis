@@ -44,7 +44,7 @@ Material:
     - _FresnelPow: 5
     - _FresnelR0: 0.04
     - _Height: 0.1
-    - _InvFade: 0.91
+    - _InvFade: 1.4
     - _RefractiveStrength: 0
     - _UseAlphaCliping: 0
     - _UseBlending: 0

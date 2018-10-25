@@ -80,6 +80,7 @@ public class TriggerMgr : MonoBehaviour
                 mgr.IntroSequence.StartCoroutine(mgr.IntroSequence.RopeFadeIn(0.5f));
                 ParticleSystem.EmissionModule dancerEmission = mgr.dancerParticle.emission;
                 dancerEmission.enabled = true;
+                mgr.StartCoroutine(mgr.SphereOn(mgr.dancerParticle));
             }));
            
         },
@@ -140,10 +141,10 @@ public class TriggerMgr : MonoBehaviour
                 trigger.TriggeredCallback();
             }));
 
-            mgr.StartCoroutine(mgr.FadeIn(10f, 20f));
-            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn));
-            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn2));
-            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn3));
+            mgr.StartCoroutine(mgr.FadeIn(10f, 10f));
+            mgr.StartCoroutine(mgr.LightOn(10f, 5f, mgr.lightToTurnOn));
+            mgr.StartCoroutine(mgr.LightOn(10f, 5f, mgr.lightToTurnOn2));
+            mgr.StartCoroutine(mgr.LightOn(5f, 0f, mgr.lightToTurnOn3));
             
 
         },
@@ -230,6 +231,22 @@ public class TriggerMgr : MonoBehaviour
         }
     }
 
+    private IEnumerator SphereOn(ParticleSystem particle)
+    {
+        MeshRenderer[] spheres = particle.gameObject.GetComponentsInChildren<MeshRenderer>();
+        foreach(MeshRenderer mesh in spheres)
+        {
+            mesh.enabled = true;
+            float startTime = Time.time;
+            while (Time.time < startTime + 3f)
+            {
+                float ratio = AnimationUtil.EaseOutQuad((Time.time - startTime) / 3f, 0f, 0.6f, 1f);
+                mesh.transform.localScale = new Vector3(ratio, ratio, ratio);
+                yield return null;
+            }
+        }
+    }
+
     private IEnumerator EmitParticle(ParticleSystem particle)
     {
 
@@ -243,7 +260,8 @@ public class TriggerMgr : MonoBehaviour
         // Once you reach the way point, you should hide the hook
 
         // Start play audio and wait until end
-        audio = _trigger.GetComponent<AudioSource>();
+        var audios = _trigger.GetComponents<AudioSource>();
+        audio = audios[0];
         if (audio == null)
             yield return null;
         else
@@ -255,6 +273,12 @@ public class TriggerMgr : MonoBehaviour
             }
 
             _callback();
+        }
+
+        if (audios.Count() > 1)
+        {
+            yield return new WaitForSeconds(5f);
+            audios[1].Play();
         }
     }
 
@@ -382,6 +406,7 @@ public class TriggerMgr : MonoBehaviour
         {
             Debug.Log("Space Pressed");
             var startAudio = startLight.GetComponent<AudioSource>();
+            triggers[0].gameObject.GetComponent<BoxCollider>().enabled = true;
             if (startAudio != null)
             {
                 PlayStartAudio();
