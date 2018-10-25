@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,52 +14,68 @@ public class PathRecord : MonoBehaviour {
     public GameObject tracker1;
     public GameObject tracker2;
 
+    [Header("Parameters")]
+    public float durationInLight = 15f;
+    public float durationInDark = 5f;
+
     private List<Vector3> path = new List<Vector3>() { };
     private float startTime; 
     private bool isTracking;
 
-    private IEnumerator DrawPath(List<Vector3> path)
+    private IEnumerator DrawPath(float duration)
     {
+
+        Debug.Log("Count:" + path.Count);
         List<Vector3> renderedPath = new List<Vector3>() { };
 
-        foreach (Vector3 point in path)
+        float sTime = Time.time;
+
+        while (Time.time  < sTime  + duration)
         {
-            yield return new WaitForSeconds(0.01f);
-            renderedPath.Add(point);
-            pathRenderer.positionCount = renderedPath.Count;
-            pathRenderer.SetPositions(renderedPath.ToArray());
+            
+            //yield return new WaitForSeconds(0.01f);
+            int index = (int)Mathf.Ceil(((Time.time - sTime) / duration) * path.Count) - 1;
+            try
+            {
+              
+                renderedPath.Add(path[index]);
+                pathRenderer.positionCount = renderedPath.Count;
+                pathRenderer.SetPositions(renderedPath.ToArray());
+            } catch (ArgumentOutOfRangeException e)
+            {
+                Debug.Log(index);
+            }
+            yield return null;
+            
         }
 
-        Debug.Log(renderedPath.Count);
+        StartCoroutine(TurnLightOff());
+
         yield return null;
     }
 
-    [ContextMenu("Reset Mesh")]
-    private void SetTextureLocation()
+    private IEnumerator TurnLightOff()
     {
-        
-        Mesh mesh = renderPlane.GetComponent<MeshFilter>().mesh;
-        Vector2 tracker1Pos = new Vector2(tracker1.transform.position.x, tracker1.transform.position.z);
-        Vector2 tracker2Pos = new Vector2(tracker2.transform.position.x, tracker2.transform.position.z);
-        float distance = Vector2.Distance(tracker1Pos, tracker2Pos);
-        Vector3 newCenter = (tracker1.transform.position + tracker2.transform.position) / 2;
-        
-        Vector2 bound1 = new Vector2(mesh.bounds.min.x, mesh.bounds.min.z);
-        Vector2 bound2 = new Vector2(mesh.bounds.max.x, mesh.bounds.max.z);
-        Debug.Log("Bound1 : " + bound1 + "Bound2:" + bound2);
-        float meshDist = Vector2.Distance(bound1, bound2);
-        Debug.Log("MeshDist:" + meshDist);
-        float ratio = distance / meshDist;
+        Light[] lights = GameObject.FindObjectsOfType<Light>();
+        foreach(Light light in lights)
+        {
+            StartCoroutine(LightOff(light));
+        }
+        yield return null;
+    }
 
-        Vector3 center = mesh.bounds.center;
-        Vector3[] vertices = mesh.vertices;
-        Vector3[] normals = mesh.normals;
-        renderPlane.transform.position = newCenter;
-        renderPlane.transform.localScale *= 2 * ratio;
-        renderPlane.transform.right = tracker2.transform.position - tracker1.transform.position;
-        //renderPlane.transform. = new Vector3(0, -1, 0);
-        renderPlane.transform.Rotate(new Vector3(0, 0, 45));
-        renderPlane.GetComponent<MeshRenderer>().enabled = true;
+    private IEnumerator LightOff(Light light)
+    {
+        float duration = 25f;
+        float startTime = Time.time;
+        float startIntensity = light.intensity;
+        Debug.Log("In Light Off");
+        while (Time.time < startTime + duration)
+        {
+            light.intensity = startIntensity - startIntensity * (Time.time - startTime) / duration;
+            yield return null;
+        }
+        light.intensity = 0.0f;
     }
 
     private void Start()
@@ -66,6 +83,7 @@ public class PathRecord : MonoBehaviour {
         isTracking = true;
         startTime = Time.time;
         renderPlane.GetComponent<MeshRenderer>().enabled = false;
+        pathRenderer.enabled = false;
     }
 
     void Update () {
@@ -79,8 +97,8 @@ public class PathRecord : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             isTracking = false;
-            SetTextureLocation();
-            StartCoroutine(DrawPath(path));
+            pathRenderer.enabled = true;
+            StartCoroutine(DrawPath(durationInLight));
             GameObject[] particles =  GameObject.FindGameObjectsWithTag("pathParticle");
             Debug.Log(particles);
             foreach(GameObject particle in particles)

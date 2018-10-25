@@ -14,9 +14,6 @@ public class TriggerMgr : MonoBehaviour
         KeyCode.Alpha3,
         KeyCode.Alpha4,
         KeyCode.Alpha5,
-        KeyCode.Alpha6,
-        KeyCode.Alpha7,
-        KeyCode.Alpha8
     };
     public TasiYokan.Curve.BezierCurve curve;
     public PlayerPathDrawer playerDrawer;
@@ -31,6 +28,7 @@ public class TriggerMgr : MonoBehaviour
     public Light lightToTurnOn3;
     public Light lightOnPt3;
     public Light startLight;
+    public Light lightOnEnd;
 
     [Header("Particles")]
     public ParticleSystem ParticleOnWaypoint1;
@@ -41,9 +39,12 @@ public class TriggerMgr : MonoBehaviour
 
     [Header("IntroSequence")]
     public IntroSequence IntroSequence;
+    public Material transparentMaterial;
+    public Material opaqueMaterial;
 
     // current playing audio
     private AudioSource audio;
+    private GameObject[] objects;
 
     private static int m_bufferLength;
     public static int BufferLength
@@ -94,6 +95,7 @@ public class TriggerMgr : MonoBehaviour
 
             mgr.StartCoroutine(mgr.EmitParticle(mgr.ParticleOnWaypoint1));
             mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWaypoint2));
+            mgr.SwapMaterial(mgr.transparentMaterial);
         },
         (mgr, trigger)=>{
             print("2");
@@ -116,18 +118,16 @@ public class TriggerMgr : MonoBehaviour
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 3");
-                //mgr.SetAnchorToNext(trigger);
                 trigger.TriggeredCallback();
+                //Connect to Dancer At Waypoint 3
                 mgr.ConnectToDancer();
                 
             }));
 
-            mgr.StartCoroutine(mgr.FadeIn(10f, 20f));
-            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn));
-            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn2));
-            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn3));
-            mgr.StartCoroutine(mgr.LightOn(5f, 30f, mgr.lightOnPt3));
-            mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWayPoint4));
+            mgr.StartCoroutine(mgr.LightOn(5f, 0f, mgr.lightOnPt3));
+
+
+            //mgr.StartCoroutine(mgr.ParticleOn(mgr.ParticleOnWayPoint4));
 
         },
         (mgr, trigger)=>{
@@ -136,20 +136,23 @@ public class TriggerMgr : MonoBehaviour
             mgr.StartCoroutine(mgr.ReachWaypointAndPlayAudio(trigger, () =>
             {
                 print("Complete 4");
-                //mgr.SetAnchorToNext(trigger);
+              
                 trigger.TriggeredCallback();
-
-                // Here we enter Stage3, we connect the player and dancer
-                //mgr.ConnectToDancer();
             }));
 
-        },
-        //(mgr, trigger)=>{
-        //    print("5");
+            mgr.StartCoroutine(mgr.FadeIn(10f, 20f));
+            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn));
+            mgr.StartCoroutine(mgr.LightOn(5f, 20f, mgr.lightToTurnOn2));
+            mgr.StartCoroutine(mgr.LightOn(5f, 10f, mgr.lightToTurnOn3));
+            
 
-        //    //mgr.SetAnchorToNext(trigger);
-        //    trigger.TriggeredCallback();
-        //},
+        },
+        (mgr, trigger)=>{
+            print("5");
+            
+            mgr.StartCoroutine(mgr.LightOn(5f, 0f, mgr.lightOnEnd));
+            trigger.TriggeredCallback();
+        },
         //(mgr, trigger)=>{
         //    print("6");
 
@@ -203,10 +206,10 @@ public class TriggerMgr : MonoBehaviour
     {
         yield return new WaitForSeconds(_wait);
         float startTime = Time.time;
+        Debug.Log("In Light ON");
         while (Time.time < startTime + _duration)
-        {
-            Debug.Log("In Light ON");
-            light.intensity = 1.5f * (Time.time - startTime) / _duration;
+        { 
+            light.intensity = 1.0f * (Time.time - startTime) / _duration;
             yield return null;
         }
     }
@@ -215,12 +218,13 @@ public class TriggerMgr : MonoBehaviour
     private IEnumerator ParticleOn(ParticleSystem particle)
     {
         var sphere = particle.gameObject.GetComponentInChildren<MeshRenderer>();
+        Debug.Log(sphere.transform.position);
         sphere.enabled = true;
         float startTime = Time.time;
+        Debug.Log("In Sphere On");
         while (Time.time < startTime + 3f)
-        {
-            Debug.Log("In Sphere On");
-            float ratio = (Time.time - startTime) / 3f;
+        {    
+            float ratio = AnimationUtil.EaseOutQuad((Time.time - startTime)/ 3f, 0f, 1f, 1f);
             sphere.transform.localScale = new Vector3(ratio, ratio, ratio);
             yield return null;
         }
@@ -237,7 +241,6 @@ public class TriggerMgr : MonoBehaviour
     {
 
         // Once you reach the way point, you should hide the hook
-        //hook.DetachHook();
 
         // Start play audio and wait until end
         audio = _trigger.GetComponent<AudioSource>();
@@ -250,10 +253,6 @@ public class TriggerMgr : MonoBehaviour
             {
                 yield return null;
             }
-
-             //For quick debug only
-            //yield return new WaitForSeconds(3);
-            //audio.Stop();
 
             _callback();
         }
@@ -309,6 +308,20 @@ public class TriggerMgr : MonoBehaviour
         }
     }
 
+    private void SwapMaterial(Material mat)
+    {
+        try
+        {
+            foreach (GameObject transparent in objects)
+            {
+                transparent.GetComponent<MeshRenderer>().material = mat;
+            }
+        } catch (NullReferenceException e)
+        {
+            Debug.Log(e.Message);
+        }
+    }
+
     private void Start()
     {
         triggers = GetComponentsInChildren<Trigger>().ToList();
@@ -341,7 +354,11 @@ public class TriggerMgr : MonoBehaviour
             var emission = particles[i].emission;
             emission.enabled = false;
         }
+
+        objects = GameObject.FindGameObjectsWithTag("transparent");
+        SwapMaterial(opaqueMaterial);
     }
+
 
     private void Update()
     {
@@ -354,7 +371,7 @@ public class TriggerMgr : MonoBehaviour
                     audio.Stop();
                 StopAllCoroutines();
 
-                if (i > 0)
+                if (i > 0 && i < 4)
                     SetAnchorToNext(triggers[i - 1]);
                 triggers[i].ForceTrigger();
             }
@@ -379,5 +396,6 @@ public class TriggerMgr : MonoBehaviour
         {
             StartCoroutine(FadeOut(5f));
         }
+
     }
 }

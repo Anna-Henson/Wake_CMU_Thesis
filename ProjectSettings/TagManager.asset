@@ -9,6 +9,7 @@ TagManager:
   - plane
   - player
   - pathParticle
+  - transparent
   layers:
   - Default
   - TransparentFX

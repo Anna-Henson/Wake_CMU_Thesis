@@ -13,7 +13,12 @@ public class IntroSequence : MonoBehaviour {
 	public GameObject rock1;
 	public GameObject rock2;
 	public GameObject rope;
-	
+
+    [Header("Parameters")]
+    public float ropeTransparency = 0.7f;
+    
+    
+    
 	private IEnumerator RockFadeIn(GameObject rock){
 		MeshRenderer renderer = rock.GetComponent<MeshRenderer>();
 		float startTime = Time.time;
@@ -30,7 +35,7 @@ public class IntroSequence : MonoBehaviour {
 		float startTime = Time.time;
 		while(Time.time < startTime + _duration){
 			Color color = renderer.material.GetColor ("_MainColor");
-			color.a = 1.0f * (Time.time - startTime) / _duration;
+			color.a = ropeTransparency * (Time.time - startTime) / _duration;
 			renderer.material.SetColor("_MainColor", color);
 			yield return null;
 		}
@@ -41,7 +46,7 @@ public class IntroSequence : MonoBehaviour {
 		float startTime = Time.time;
 		while(Time.time < startTime + _duration){
 			Color colorTex = renderer.material.GetColor ("_MainColor");
-			colorTex.a = 1.0f - ((Time.time - startTime)/ _duration);
+			colorTex.a = ropeTransparency - ((Time.time - startTime)/ _duration);
 			renderer.material.SetColor("_MainColor", colorTex);
 			yield return null;
 		}

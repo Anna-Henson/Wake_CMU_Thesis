@@ -114,14 +114,14 @@ public class ME_TrailRendererNoise : MonoBehaviour
         {
             InterpolateBezier(points, SmoothCurvesScale);
             var bezierPositions = GetDrawingPoints();
-            lineRenderer.positionCount = bezierPositions.Count - 1;
+            lineRenderer.numPositions = bezierPositions.Count - 1;
             lineRenderer.SetPositions(bezierPositions.ToArray());
         }
     }
 
     void UpdateLineRenderer()
     {
-        lineRenderer.positionCount = Mathf.Clamp(points.Count - 1, 0, Int32.MaxValue);
+        lineRenderer.numPositions = Mathf.Clamp(points.Count - 1, 0, Int32.MaxValue);
         lineRenderer.SetPositions(points.ToArray());
     }
 
