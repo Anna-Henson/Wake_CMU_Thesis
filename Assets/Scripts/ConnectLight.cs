@@ -17,22 +17,29 @@ public class ConnectLight : MonoBehaviour {
 
     IEnumerator Shoot()
     {
+ 
         float startTime = Time.time;
         particle1.GetComponentInChildren<Light>().enabled = true;
+
+        //Animated Light
+        float currentRange = particle1.GetComponentInChildren<Light>().range;
+        AnimationCurve curve = AnimationCurve.EaseInOut(startTime, currentRange, startTime + 1f, 1.5f);
+
         while (Time.time < startTime + 1f)
         {
-            float ratio = AnimationUtil.EaseOutQuad((Time.time - startTime) / 1f, 0f, 1f, 1f);
-            particle1.GetComponentInChildren<Light>().range += (0.01f + 0.001f * (Time.time - startTime));
+            particle1.GetComponentInChildren<Light>().range = curve.Evaluate(Time.time);
             yield return null;
         }
 
-        while (Time.time < startTime + 2f)
+        startTime = Time.time;
+        curve = AnimationCurve.EaseInOut(startTime, 1.5f , startTime + 1.5f, currentRange);
+        while (Time.time < startTime + 1.5f)
         {
-            float ratio = AnimationUtil.EaseInQuad((Time.time - startTime) / 1f, 0f, 1f, 1f);
-            particle1.GetComponentInChildren<Light>().range -= (0.01f + 0.001f * (Time.time - startTime));
+            particle1.GetComponentInChildren<Light>().range = curve.Evaluate(Time.time);
             yield return null;
         }
 
+        //Shoot the light out
         particle1.GetComponent<WaypointEmitter>().setDestination(light1);
         particle1.GetComponent<WaypointEmitter>().enabled = true;
         audio.Play();

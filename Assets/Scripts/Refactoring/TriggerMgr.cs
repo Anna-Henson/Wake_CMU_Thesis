@@ -240,7 +240,7 @@ public class TriggerMgr : MonoBehaviour
             float startTime = Time.time;
             while (Time.time < startTime + 3f)
             {
-                float ratio = AnimationUtil.EaseOutQuad((Time.time - startTime) / 3f, 0f, 0.6f, 1f);
+                float ratio = AnimationUtil.EaseOutQuad((Time.time - startTime) / 3f, 0f, 1f, 1f);
                 mesh.transform.localScale = new Vector3(ratio, ratio, ratio);
                 yield return null;
             }
@@ -251,7 +251,9 @@ public class TriggerMgr : MonoBehaviour
     {
 
         particle.GetComponent<ConnectLight>().ShootParicle();
-        yield return null;
+        MeshRenderer mesh = particle.gameObject.GetComponentInChildren<MeshRenderer>();
+        yield return new WaitForSeconds(1f);
+        mesh.material.SetFloat("_OpacityClip", 0);
     }
 
     private IEnumerator ReachWaypointAndPlayAudio(Trigger _trigger, Action _callback)
@@ -419,6 +421,10 @@ public class TriggerMgr : MonoBehaviour
         //End the experience
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
+            //Dancer Particle Needs to be Gone at the End
+            ParticleSystem.EmissionModule emission = dancerParticle.emission;
+            emission.enabled = false;
+            //Starts to Fade Out Camera
             StartCoroutine(FadeOut(5f));
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Group of static methods available for animation use
 public class AnimationUtil : MonoBehaviour {
 
     public static float EaseInOutQuad(float t, float b, float c, float d)
@@ -23,4 +24,6 @@ public class AnimationUtil : MonoBehaviour {
         t /= d;
         return -c * t * (t - 2) + b;
     }
+    
+
 }

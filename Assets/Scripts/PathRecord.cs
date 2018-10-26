@@ -17,6 +17,7 @@ public class PathRecord : MonoBehaviour {
     [Header("Parameters")]
     public float durationInLight = 15f;
     public float durationInDark = 5f;
+    public float duration = 10f;
 
     private List<Vector3> path = new List<Vector3>() { };
     private float startTime; 
@@ -29,7 +30,6 @@ public class PathRecord : MonoBehaviour {
         List<Vector3> renderedPath = new List<Vector3>() { };
 
         float sTime = Time.time;
-
         while (Time.time  < sTime  + duration)
         {
             
@@ -38,7 +38,7 @@ public class PathRecord : MonoBehaviour {
             try
             {
               
-                renderedPath.Add(path[index]);
+                renderedPath = path.GetRange(0, index - 1);
                 pathRenderer.positionCount = renderedPath.Count;
                 pathRenderer.SetPositions(renderedPath.ToArray());
             } catch (ArgumentOutOfRangeException e)
@@ -81,17 +81,17 @@ public class PathRecord : MonoBehaviour {
 
     private IEnumerator TurnPathOff()
     {
-        float duration = 10f;
         float startTime = Time.time;
-        float startIntensity = pathRenderer.material.GetFloat("_InvFade");
+        Color color = pathRenderer.material.GetColor("_TintColor");
+        float startIntensity = color.a;
         Debug.Log("In Path Off");
         while (Time.time < startTime + duration)
         {
             float fade = startIntensity - startIntensity * (Time.time - startTime) / duration;
-            pathRenderer.material.SetFloat("_InvFade", fade);
+            color.a = fade;
+            pathRenderer.material.SetColor("_TintColor", color);
             yield return null;
         }
-        pathRenderer.material.SetFloat("_InvFade", 0.0f);
     }
     private void Start()
     {
@@ -108,14 +108,14 @@ public class PathRecord : MonoBehaviour {
             path.Add(trackerPlayer.transform.position);
         }
 
-        //Stop Tracking Location When Camera Fades out
+        //Stop Tracking Location When Camera Fades out and start drawing path
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             isTracking = false;
             pathRenderer.enabled = true;
+            //Start to draw path
             StartCoroutine(DrawPath(durationInLight));
             GameObject[] particles =  GameObject.FindGameObjectsWithTag("pathParticle");
-            Debug.Log(particles);
             foreach(GameObject particle in particles)
             {
                 particle.GetComponent<MeshRenderer>().enabled = false;
