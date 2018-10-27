@@ -112,7 +112,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _WindowDistance: -0.7
-    - _WindowSize: 6.76
+    - _WindowSize: 6.29
     - _ZWrite: 1
     m_Colors:
     - _BackgroundColor: {r: 1, g: 1, b: 1, a: 1}

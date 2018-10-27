@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class UserData {
 
-    private float time;
-    private Vector3 tracker1pos;
-    private Vector3 tracker2pos;
-    private Vector3 dancer1pos;
-    private Vector3 dancer2pos;
-    private Vector3 headpos;
-    private float proximity;
-    private float alignment;
-    private float speed1;
-    private float speed2;
+    public float time { get; set; }
+    public Vector3 tracker1pos { get; set; }
+    public Vector3 tracker2pos { get; set; }
+    public Vector3 dancer1pos { get; set; }
+    public Vector3 dancer2pos { get; set; }
+    public Vector3 headpos { get; set; }
+    public float proximity { get; set; }
+    public float alignment { get; set; }
+    public float speed1 { get; set; }
+    public float speed2 { get; set; }
 
     public UserData(float time, Vector3 headPos, Vector3 tracker1pos, Vector3 tracker2pos, Vector3 dancer1pos, Vector3 dancer2pos, Vector3 camera, float speed1, float speed2)
     {
@@ -25,6 +25,20 @@ public class UserData {
         this.dancer2pos = dancer2pos;
         this.proximity = (Vector3.Distance(tracker1pos, dancer1pos) + Vector3.Distance(tracker2pos, dancer2pos)) / 2;
         this.alignment = Vector3.Dot((dancer1pos + dancer2pos) / 2, camera);
+        this.speed1 = speed1;
+        this.speed2 = speed2;
+    }
+
+    public UserData(float time, Vector3 headPos, Vector3 tracker1pos, Vector3 tracker2pos, Vector3 dancer1pos, Vector3 dancer2pos, float proximity, float alignment, float speed1, float speed2)
+    {
+        this.time = time;
+        this.tracker1pos = tracker1pos;
+        this.tracker2pos = tracker2pos;
+        this.headpos = headPos;
+        this.dancer1pos = dancer1pos;
+        this.dancer2pos = dancer2pos;
+        this.proximity = proximity;
+        this.alignment = alignment;
         this.speed1 = speed1;
         this.speed2 = speed2;
     }
