@@ -19,6 +19,11 @@ public class PathRecord : MonoBehaviour {
     public float durationInDark = 5f;
     public float duration = 10f;
 
+    [Header("Spheres")]
+    public MeshRenderer sphere1;
+    public MeshRenderer sphere2;
+    public MeshRenderer sphere3;
+
     private List<Vector3> path = new List<Vector3>() { };
     private float startTime; 
     private bool isTracking;
@@ -93,6 +98,20 @@ public class PathRecord : MonoBehaviour {
             yield return null;
         }
     }
+
+    private IEnumerator SphereOut()
+    {
+        float startTime = Time.time;
+        AnimationCurve curve = AnimationCurve.EaseInOut(startTime, 1f, startTime + 3f, 0f);
+        while (Time.time < startTime + 3f)
+        {
+            float ratio = curve.Evaluate(Time.time);
+            sphere1.material.SetFloat("_OpacityClip", ratio);
+            sphere2.material.SetFloat("_OpacityClip", ratio);
+            sphere3.material.SetFloat("_OpacityClip", ratio);
+            yield return null;
+        }
+    }
     private void Start()
     {
         isTracking = true;
@@ -120,6 +139,8 @@ public class PathRecord : MonoBehaviour {
             {
                 particle.GetComponent<MeshRenderer>().enabled = false;
             }
+
+            StartCoroutine(SphereOut());
         }
 	}
 }
