@@ -41,8 +41,13 @@ public class TriggerMgr : MonoBehaviour
     public Material transparentMaterial;
     public Material opaqueMaterial;
 
+    [Header("Sounds")]
+    public AudioSource bgm;
+    public AudioSource sfx2;
+
     // current playing audio
     private AudioSource audio;
+ 
     private GameObject[] objects;
 
     private static int m_bufferLength;
@@ -419,6 +424,8 @@ public class TriggerMgr : MonoBehaviour
         {
             Debug.Log("Space Pressed");
             var startAudio = startLight.GetComponent<AudioSource>();
+            bgm.enabled = true;
+            sfx2.volume = 1;
             triggers[0].gameObject.GetComponent<BoxCollider>().enabled = true;
             if (startAudio != null)
             {

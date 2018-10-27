@@ -23,26 +23,25 @@ public class WakeAnalytics : MonoBehaviour {
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
             float timeSinceLoad = Time.time - startTime;
             float speed1;
             float speed2;
             if (device1 == null || device2 == null)
             {
-                Debug.Log(device1.velocity);
-                speed1 = Vector3.Magnitude(device1.velocity);
-                speed2 = Vector3.Magnitude(device2.velocity);
-            } else
-            {
                 speed1 = 0;
                 speed2 = 0;
+               
+            } else
+            {
+                speed1 = Vector3.Magnitude(device1.velocity);
+                speed2 = Vector3.Magnitude(device2.velocity);
             }
             UserData position = new UserData(timeSinceLoad, hmd.transform.position, playerTracker1.transform.position, 
                 playerTracker2.transform.position, dancerTracker1.transform.position, dancerTracker2.transform.position, 
                 cameraobj.transform.forward, speed1, speed2);
             
             WriteToLog(position.ToString());
-            yield return null;
         }
     }
 

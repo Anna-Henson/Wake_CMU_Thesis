@@ -23,8 +23,8 @@ public class UserData {
         this.headpos = headPos;
         this.dancer1pos = dancer1pos;
         this.dancer2pos = dancer2pos;
-        this.proximity = Vector3.Distance(tracker1pos, dancer1pos) + Vector3.Distance(tracker2pos, dancer2pos) / 2;
-        this.alignment = Vector3.Dot(dancer1pos + dancer2pos / 2, camera);
+        this.proximity = (Vector3.Distance(tracker1pos, dancer1pos) + Vector3.Distance(tracker2pos, dancer2pos)) / 2;
+        this.alignment = Vector3.Dot((dancer1pos + dancer2pos) / 2, camera);
         this.speed1 = speed1;
         this.speed2 = speed2;
     }
